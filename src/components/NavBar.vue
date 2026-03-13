@@ -1,30 +1,29 @@
-<script setup lang="ts">
-import { useDark, useToggle } from '@vueuse/core';
+<script setup>
+import { ref } from 'vue';
+import Menubar from 'primevue/menubar';
+import Button from 'primevue/button';
 import { RouterLink } from 'vue-router';
-
-
-const isDark = useDark();
-const toggleDark = useToggle(isDark);
+import { isDark, toggleDark } from '../darkmode';
 
 </script>
 
 
+
 <template>
-  <nav class="navbar">
-    <div class="navbar-inner">
-      <div class="tab-group">
-        <RouterLink to="/intake"  class="tab-btn" active-class="active">Intake</RouterLink>
-        <RouterLink to="/analyze" class="tab-btn" active-class="active">Analyze</RouterLink>
-      </div>
-      <button
-        class="theme-btn"
-        @click="toggleDark()"
-      >
-        {{ isDark ? '☀' : '☽' }}
-      </button>
-    </div>
-  </nav>
+    <nav>
+
+        <div class="tab-group">
+            <RouterLink to="/intake">
+                <Button label="Intake" />
+            </RouterLink>
+            <RouterLink to="/analyze">
+                <Button label="Analyze" />
+            </RouterLink>
+
+            <Button @click="toggleDark()">
+                {{ isDark ? '☀' : '☽' }}
+            </Button>
+        </div>
+
+    </nav>
 </template>
-
-
-

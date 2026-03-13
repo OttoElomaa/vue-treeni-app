@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+
+@theme {
+  /* This tells Tailwind that 'dark:' utilities should trigger on .app-dark */
+  --dark-selector: ".my-app-dark";
+}
