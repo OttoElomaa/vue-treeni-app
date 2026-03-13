@@ -4,6 +4,6 @@ import { Text } from 'vue';
 </script>
 
 <template>
-        <h1>Player Analyze Screen</h1>
+        <h1 class="text-4xl">Player Analyze Screen</h1>
     
 </template>

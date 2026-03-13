@@ -4,5 +4,6 @@ import PlayerIntake from './intake/PlayerIntake.vue';
 
 
 <template>
-    <PlayerIntake/>
+        <PlayerIntake />
+    
 </template>

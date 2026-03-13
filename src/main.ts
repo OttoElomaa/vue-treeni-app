@@ -4,6 +4,7 @@ import router from "./router";
 // UI Stuff
 import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
+import "./style.css"
 //import Lara from "@primeuix/themes/lara";
 //import Material from "@primeuix/themes/material";
 

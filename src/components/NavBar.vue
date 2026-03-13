@@ -10,20 +10,20 @@ import { isDark, toggleDark } from '../darkmode';
 
 
 <template>
-    <nav>
+    <div class="mx-auto flex max-w-sm items-center gap-x-4 rounded-xl">
 
-        <div class="tab-group">
-            <RouterLink to="/intake">
-                <Button label="Intake" />
-            </RouterLink>
-            <RouterLink to="/analyze">
-                <Button label="Analyze" />
-            </RouterLink>
 
-            <Button @click="toggleDark()">
-                {{ isDark ? '☀' : '☽' }}
-            </Button>
-        </div>
+        <RouterLink to="/intake">
+            <Button label="Intake" />
+        </RouterLink>
+        <RouterLink to="/analyze">
+            <Button label="Analyze" />
+        </RouterLink>
 
-    </nav>
+        <Button @click="toggleDark()">
+            {{ isDark ? '☀' : '☽' }}
+        </Button>
+
+
+    </div>
 </template>

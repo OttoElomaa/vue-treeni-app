@@ -6,5 +6,9 @@ import PlayerAnalyze from './analyze/PlayerAnalyze.vue';
 
 
 <template>
-    <PlayerAnalyze/>
+        <PlayerAnalyze />
+    
 </template>
+
+
+

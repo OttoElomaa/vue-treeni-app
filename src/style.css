@@ -1,7 +1,15 @@
 @import "tailwindcss";
 @import "tailwindcss-primeui";
 
+/* If you have PrimeVue layers, they should come AFTER */
+@layer base, primevue, utilities;
+
 @theme {
   /* This tells Tailwind that 'dark:' utilities should trigger on .app-dark */
   --dark-selector: ".my-app-dark";
 }
+
+
+/* .setfont {
+    font-family: Lato !important;
+} */
