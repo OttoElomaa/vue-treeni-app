@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import OrgAnalyze from './analyze/OrgAnalyze.vue';
 import PlayerAnalyze from './analyze/PlayerAnalyze.vue';
 
 
@@ -6,7 +7,7 @@ import PlayerAnalyze from './analyze/PlayerAnalyze.vue';
 
 
 <template>
-        <PlayerAnalyze />
+        <OrgAnalyze />
     
 </template>
 

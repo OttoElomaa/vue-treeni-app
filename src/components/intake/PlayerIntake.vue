@@ -8,9 +8,11 @@ import { Card } from 'primevue';
         <h1 class="text-4xl">Player Intake Screen</h1>
 
         <Card>
-                <template #content>
-                        PrimeVue Card (Aura theme should auto-adjust)
-                </template>
+                <template #title>Card</template>
+                <template #content>PrimeVue Card (Aura theme should auto-adjust)</template>
+        
+                        
+                
         </Card>
 
 </template>
