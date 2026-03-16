@@ -1,15 +1,11 @@
 @import "tailwindcss";
-@import "tailwindcss-primeui";
+@import "tailwindcss-primeui"; /* Bridges PrimeVue design tokens to Tailwind */
 
-/* If you have PrimeVue layers, they should come AFTER */
+/* Align Tailwind's 'dark:' variant with PrimeVue's selector */
+@custom-variant dark (&:where(.my-app-dark, .my-app-dark *));
+
 @layer base, primevue, utilities;
 
-@theme {
-  /* This tells Tailwind that 'dark:' utilities should trigger on .app-dark */
-  --dark-selector: ".my-app-dark";
+@layer primevue {
+  /* PrimeVue styles will be injected here via the PrimeVue plugin */
 }
-
-
-/* .setfont {
-    font-family: Lato !important;
-} */

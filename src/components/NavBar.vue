@@ -14,8 +14,8 @@ const currentTier = computed(() => route.params.tier as string || 'org');
 const currentId = computed(() => route.params.id as string || '');
 
 const goTo = (action: string) => {
-    console.log("Navbar button pathing: ",action,currentTier.value,currentId.value);
-    
+    console.log("Navbar button pathing: ", action, currentTier.value, currentId.value);
+
     router.push(`/${action}/${currentTier.value}/${currentId.value}`);
 };
 
@@ -26,15 +26,19 @@ const goTo = (action: string) => {
 
 
 <template>
-    <div class="flex flex-row">
+    <nav class="w-full p-4 sticky top-0 z-50">
+        <div class="flex items-center justify-between mx-auto p-5 bg-surface-100 dark:bg-surface-900">
+            <div>
+                <p class="text-3xl">Treeni App</p>
+            </div>
+            <div class="space-x-4">
+                <Button label="Intake" @click="goTo('intake')" />
+                <Button label="Analyze" @click="goTo('analyze')" />
+            </div>
+            <Button @click="toggleDark()">
+                {{ isDark ? '☀' : '☽' }}
+            </Button>
+        </div>
 
-        <Button label="Intake" @click="goTo('intake')" />
-        <Button label="Analyze" @click="goTo('analyze')" />
-
-        <Button @click="toggleDark()">
-            {{ isDark ? '☀' : '☽' }}
-        </Button>
-
-
-    </div>
+    </nav>
 </template>

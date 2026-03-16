@@ -11,8 +11,6 @@ import { RouterLink } from 'vue-router';
 const teams = ref([] as Team[]);
 const errorText = ref("Loading...")
 
-
-
 onMounted(async () => {
     const { teams: fetchedTeams, errorText: fetchedError } = await fetchTeams();
     teams.value = fetchedTeams
