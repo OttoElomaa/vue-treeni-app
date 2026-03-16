@@ -7,16 +7,16 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: '/analyze',
+      redirect: '/analyze/org',
     },
     {
-      path: "/analyze",
-      name: "analyze",
+      path: "/analyze/:tier/:id?",
+      name: "Analyze",
       component: AnalyzeScreen,
     },
     {
-      path: "/intake",
-      name: "intake",
+      path: "/intake/:tier/:id?",
+      name: "Intake",
       component: IntakeScreen,
     },
   ],
