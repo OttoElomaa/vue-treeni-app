@@ -8,6 +8,8 @@ import "./style.css";
 //import Lara from "@primeuix/themes/lara";
 //import Material from "@primeuix/themes/material";
 
+console.log('Debug - Main.ts: Full pathname:', window.location.pathname)
+
 const app = createApp(App) as any;
 
 app.use(router);

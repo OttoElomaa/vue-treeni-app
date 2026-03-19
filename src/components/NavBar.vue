@@ -5,19 +5,21 @@ import Button from 'primevue/button';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { isDark, toggleDark } from '../darkmode';
 import { SelectButton } from 'primevue';
+import type { Mode } from '../types';
 
 const route = useRoute();
 const router = useRouter();
 
-const currentAction = computed(() => route.path.includes('intake') ? 'intake' : 'analyze');
-const currentTier = computed(() => route.params.tier as string || 'org');
-const currentId = computed(() => route.params.id as string || '');
+const currentMode = computed(() => {
+    const name = route.name?.toString() || ''
+    if (name.includes('intake')) return 'intake'
+    return 'analyze'
+})
 
-const goTo = (action: string) => {
-    console.log("Navbar button pathing: ", action, currentTier.value, currentId.value);
-
-    router.push(`/${action}/${currentTier.value}/${currentId.value}`);
-};
+function goTo(mode: Mode) {
+    const rest = route.path.split('/').slice(2).join('/')
+    router.push(`/${mode}/${rest}`)
+}
 
 
 </script>
@@ -32,8 +34,10 @@ const goTo = (action: string) => {
                 <p class="text-3xl">Treeni App</p>
             </div>
             <div class="space-x-4">
-                <Button label="Intake" @click="goTo('intake')" />
-                <Button label="Analyze" @click="goTo('analyze')" />
+                <Button label="Intake" :severity="currentMode === 'intake' ? 'primary' : 'secondary'"
+                    @click="goTo('intake')" />
+                <Button label="Analyze" :severity="currentMode === 'analyze' ? 'primary' : 'secondary'"
+                    @click="goTo('analyze')" />
             </div>
             <Button @click="toggleDark()">
                 {{ isDark ? '☀' : '☽' }}
