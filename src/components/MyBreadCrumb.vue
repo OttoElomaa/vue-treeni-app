@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Breadcrumb } from 'primevue'
-import type { MenuItem } from 'primevue/menuitem'
+import { Breadcrumb, Button } from 'primevue'
+import type { MenuItem, MenuItemCommandEvent } from 'primevue/menuitem'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -19,8 +19,10 @@ const items = computed<MenuItem[]>(() => {
   const params = route.params
   const crumbs: MenuItem[] = []
 
-  crumbs.push({label: `Org`,
-      command: () => router.push(`/${mode}`),})
+  crumbs.push({
+    label: `Org`,
+    command: () => router.push(`/${mode}`),
+  })
 
   if (params.teamId) {
     crumbs.push({
@@ -42,7 +44,12 @@ const items = computed<MenuItem[]>(() => {
 
 <template>
   <div>
-    <Breadcrumb :model="items" />
+    <Breadcrumb :model="items">
+      <template #item="{ item }">
+        <Button :label="item.label as string" severity="secondary" rounded size="small" 
+        @click="(e) => item.command?.({ originalEvent: e, item })" />
+      </template>
+    </Breadcrumb>
   </div>
-  
+
 </template>
