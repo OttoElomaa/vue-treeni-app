@@ -47,7 +47,7 @@ onMounted(async () => {
         <p>{{ errorText }}</p>
 
 
-        <RouterLink v-for="player in players" :key="player.id" :to="`/analyze/team/${props.teamId}/player/${player.id}`"
+        <RouterLink v-for="player in players" :key="player.id" :to="`/intake/team/${props.teamId}/player/${player.id}`"
             class="card-link">
 
             <Card>

@@ -82,3 +82,30 @@ export const fetchPlayersByTeamId = async (id:number) => {
   }
   return { players: players, errorText: errorText };
 };
+
+
+export const fetchPlayerById = async (id:number) => {
+  let players = [] as Player[];
+  let errorText = "Loading...";
+
+  const { error, data } = await supabase
+    .from("players")
+    .select("*")
+    .eq("id", id)
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("Error in supabase player select by ID: ", error.message);
+    errorText = "Error in supabase player select by ID";
+  } else if (data.length == 0) {
+    console.error(
+      "Error in supabase select: No data was returned. Are you logged in?",
+    );
+    errorText = "No data was returned. Are you logged in?";
+  } else {
+    players = data;
+    console.log(data);
+    errorText = "";
+  }
+  return { player: players[0], errorText: errorText };
+};

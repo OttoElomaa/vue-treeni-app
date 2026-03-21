@@ -23,6 +23,7 @@ onMounted(async () => {
     const { players: fetchedPlayers, errorText: fetchedError } = await fetchPlayersByTeamId(props.teamId);
     players.value = fetchedPlayers
     errorText.value = fetchedError
+    
     // SUPABASE FETCH TEAM INFO
     const { team: fetchedTeam, errorText: fetchedError2 } = await fetchTeamById(props.teamId)
     team.value = fetchedTeam
