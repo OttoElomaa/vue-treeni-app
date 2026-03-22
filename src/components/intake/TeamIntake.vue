@@ -46,7 +46,7 @@ const goToAddTeam = () => {
     <div v-if="loading">
         <p class="text-2xl">Loading...</p>
     </div>
-    <div v-else>
+    <div v-else class="grid gap-4 grid-cols-1">
 
         <p class="text-2xl">Team Intake Screen</p>
         <h1 class="text-4xl">{{ teamName }}</h1>
@@ -55,14 +55,16 @@ const goToAddTeam = () => {
 
         <Button label="Add Player" @click="goToAddTeam" />
 
-        <RouterLink v-for="player in players" :key="player.id" :to="`/intake/team/${props.teamId}/player/${player.id}`"
-            class="card-link">
+        <div class="grid gap-4 grid-cols-1">
+            <RouterLink v-for="player in players" :key="player.id"
+                :to="`/intake/team/${props.teamId}/player/${player.id}`" class="card-link">
 
-            <Card>
-                <template #title>{{ player.first_name }} {{ player.last_name }}</template>
-                <template #content>Born {{ player.birth_year }}</template>
-            </Card>
-        </RouterLink>
+                <Card>
+                    <template #title>{{ player.first_name }} {{ player.last_name }}</template>
+                    <template #content>Born {{ player.birth_year }}</template>
+                </Card>
+            </RouterLink>
+        </div>
 
     </div>
 

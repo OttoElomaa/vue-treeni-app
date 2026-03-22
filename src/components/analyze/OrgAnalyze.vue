@@ -20,18 +20,21 @@ onMounted(async () => {
 </script>
 
 <template>
-    <h1 class="text-4xl">Org Analyze Screen</h1>
+    <div class="grid gap-4 grid-cols-1">
+        <h1 class="text-4xl">Org Analyze Screen</h1>
 
-    <p>{{ errorText }}</p>
+        <p>{{ errorText }}</p>
 
+        <div class="grid gap-4 grid-cols-1">
+            <RouterLink v-for="team in teams" :key="team.id" :to="`/analyze/team/${team.id}`" class="card-link">
 
-    <RouterLink v-for="team in teams" :key="team.id" :to="`/analyze/team/${team.id}`" class="card-link">
-
-        <Card>
-            <template #title>{{ team.team_name }}</template>
-            <template #content>Info...</template>
-        </Card>
-    </RouterLink>
+                <Card>
+                    <template #title>{{ team.team_name }}</template>
+                    <template #content>Info...</template>
+                </Card>
+            </RouterLink>
+        </div>
+    </div>
 
 
 </template>
