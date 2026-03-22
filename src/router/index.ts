@@ -12,6 +12,7 @@ import OrgIntake from "../components/intake/OrgIntake.vue";
 import TeamIntake from "../components/intake/TeamIntake.vue";
 import PlayerIntake from "../components/intake/PlayerIntake.vue";
 import type { Mode } from "../types";
+import AddPlayer from "../components/intake/AddPlayer.vue";
 
 // ─── Types ───────────────────────────────────────────────────────
 
@@ -56,6 +57,12 @@ const routes: RouteRecordRaw[] = [
 		path: "/intake/team/:teamId",
 		name: "team-intake",
 		component: TeamIntake,
+		props: true,
+	},
+		{
+		path: "/intake/team/:teamId/add",
+		name: "team-intake-add-player",
+		component: AddPlayer,
 		props: true,
 	},
 	{

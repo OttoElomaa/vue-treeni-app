@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { supabase } from '../../lib/supabase-client';
 import type { Player, Team } from '../../types';
-import { Card } from 'primevue';
+import { Button, Card } from 'primevue';
 import { fetchPlayersByTeamId, fetchTeamById, fetchTeams } from '../../databaseFunctions/fetch';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 
@@ -10,6 +10,9 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 const props = defineProps<{
     teamId: number
 }>()
+
+const route = useRoute()
+const router = useRouter()
 
 const loading = ref(true)
 
@@ -33,6 +36,10 @@ onMounted(async () => {
 
 });
 
+const goToAddTeam = () => {
+    router.push(`/intake/team/${props.teamId}/add`)
+}
+
 </script>
 
 <template>
@@ -46,6 +53,7 @@ onMounted(async () => {
 
         <p>{{ errorText }}</p>
 
+        <Button label="Add Player" @click="goToAddTeam" />
 
         <RouterLink v-for="player in players" :key="player.id" :to="`/intake/team/${props.teamId}/player/${player.id}`"
             class="card-link">
