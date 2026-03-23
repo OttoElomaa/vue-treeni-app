@@ -28,7 +28,7 @@ function goTo(mode: Mode) {
 
 
 <template>
-    <nav class="w-full p-4 sticky top-0 z-50">
+    <nav class="sticky top-0 z-50 mb-4">
         <div class="flex items-center justify-between mx-auto p-5 bg-surface-100 dark:bg-surface-900">
             <div>
                 <p class="text-3xl">Treeni App</p>

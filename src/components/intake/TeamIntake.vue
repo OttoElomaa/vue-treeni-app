@@ -53,7 +53,9 @@ const goToAddTeam = () => {
 
         <p>{{ errorText }}</p>
 
-        <Button label="Add Player" @click="goToAddTeam" />
+        <div class="flex-row">
+            <Button label="Add Player" @click="goToAddTeam" class="flex-none" />
+        </div>
 
         <div class="grid gap-4 grid-cols-1">
             <RouterLink v-for="player in players" :key="player.id"

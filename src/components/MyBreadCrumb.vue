@@ -13,6 +13,11 @@ const currentMode = computed(() => {
   return name.includes('intake') ? 'intake' : 'analyze'
 })
 
+const routeHasAdd = computed(() => {
+  const name = route.name?.toString() || ''
+  return name.includes('add')
+})
+
 
 const items = computed<MenuItem[]>(() => {
   const mode = currentMode.value
@@ -29,6 +34,13 @@ const items = computed<MenuItem[]>(() => {
       label: `Team ${params.teamId}`,
       command: () => router.push(`/${mode}/team/${params.teamId}`),
     })
+
+    if (routeHasAdd.value) {
+      crumbs.push({
+        label: `Add Player`,
+        command: () => router.push(`/${mode}/team/${params.teamId}/add`),
+      })
+    }
   }
 
   if (params.playerId) {
@@ -43,11 +55,11 @@ const items = computed<MenuItem[]>(() => {
 </script>
 
 <template>
-  <div>
+  <div class="mb-8">
     <Breadcrumb :model="items">
       <template #item="{ item }">
-        <Button :label="item.label as string" severity="secondary" rounded size="small" 
-        @click="(e) => item.command?.({ originalEvent: e, item })" />
+        <Button :label="item.label as string" severity="secondary" rounded size="small"
+          @click="(e) => item.command?.({ originalEvent: e, item })" />
       </template>
     </Breadcrumb>
   </div>
