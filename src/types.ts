@@ -5,7 +5,7 @@ export const TeamSchema = z.object({
   id: z.number()
   .int().positive(), 
   team_name: z.string()
-  .min(1, "Team name cannot be empty"),
+  .min(1, "Anna tiimin nimi"),
 });
 
 // Infer the Team type from the schema
@@ -16,18 +16,18 @@ export const PlayerSchema = z.object({
   id: z.number()
   .int().positive(),
   first_name: z.string()
-  .min(1, "First name is required"),
+  .min(1, "Anna etunimi"),
   last_name: z.string()
-  .min(1, "Last name is required"),
+  .min(1, "Anna sukunimi"),
   team_id: z.number()
   .int().positive(),
   
   birth_year: z.number()
-  .int().min(1900).max(new Date().getFullYear(), "Birth year in future"),
+  .int().min(1900, "Liian pieni luku").max(new Date().getFullYear(), "Syntymävuosi tulevaisuudessa"),
   birth_month: z.number()
-  .int().min(1).max(12),
+  .int().min(1,"Liian pieni luku").max(12,"Liian suuri luku"),
   birth_day: z.number()
-  .int().min(1).max(31),
+  .int().min(1,"Liian pieni luku").max(31,"Liian suuri luku"),
 });
 
 export type Player = z.infer<typeof PlayerSchema>;
