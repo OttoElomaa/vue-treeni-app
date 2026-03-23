@@ -22,6 +22,7 @@ const testTestTest = ref(false)
 const isInvalidSubmit = ref(false)
 
 const onFormSubmit = () => {
+	testTestTest.value = true
 	isInvalidSubmit.value = true
 }
 
@@ -30,10 +31,11 @@ const onFormSubmit = () => {
 <template>
 	<div class="grid gap-4 grid-cols-1">
 		<h1 class="text-2xl">Intake Screen - Add Player</h1>
-		<p v-if="testTestTest">Submitted!</p>
 
-
-
+		<div v-if="testTestTest">
+			<p >Submitted!</p>
+		</div>
+		
 
 		<Form v-slot="$form" :initialValues :resolver="resolver" @submit="onFormSubmit" :validateOnValueUpdate="true"
 			class="flex flex-col gap-4">

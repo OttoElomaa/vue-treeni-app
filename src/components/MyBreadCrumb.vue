@@ -52,13 +52,14 @@ const items = computed<MenuItem[]>(() => {
 
   return crumbs
 })
+
 </script>
 
 <template>
   <div class="mb-8">
     <Breadcrumb :model="items">
       <template #item="{ item }">
-        <Button :label="item.label as string" severity="secondary" rounded size="small"
+        <Button :label="item.label?.toString()" severity="secondary" rounded raised
           @click="(e) => item.command?.({ originalEvent: e, item })" />
       </template>
     </Breadcrumb>

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import Menubar from 'primevue/menubar';
 import Button from 'primevue/button';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { isDark, toggleDark } from '../darkmode';
+import { isDark, toggleDark } from '../styles/darkmode';
 import { SelectButton } from 'primevue';
 import type { Mode } from '../types';
 
@@ -28,7 +28,7 @@ function goTo(mode: Mode) {
 
 
 <template>
-    <nav class="sticky top-0 z-50 mb-4">
+    <nav class="sticky top-0 z-50">
         <div class="flex items-center justify-between mx-auto p-5 bg-surface-100 dark:bg-surface-900">
             <div>
                 <p class="text-3xl">Treeni App</p>
@@ -39,7 +39,7 @@ function goTo(mode: Mode) {
                 <Button label="Analyze" :severity="currentMode === 'analyze' ? 'primary' : 'secondary'"
                     @click="goTo('analyze')" />
             </div>
-            <Button @click="toggleDark()">
+            <Button severity="primary"  @click="toggleDark()">
                 {{ isDark ? '☀' : '☽' }}
             </Button>
         </div>
