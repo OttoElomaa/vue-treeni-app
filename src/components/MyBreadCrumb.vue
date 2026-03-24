@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Breadcrumb, Button } from 'primevue'
 import type { MenuItem, MenuItemCommandEvent } from 'primevue/menuitem'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchPlayerById, fetchTeamById } from '../databaseFunctions/fetch'
@@ -31,30 +31,35 @@ const playerName = ref("")
 
 
 
-onMounted(async () => {
+watch(
+  () => route.params.teamId,
+  async (teamId) => {
+    teamName.value = ''
+    if (!teamId) return
 
-  const teamId = routeParams.teamId as string
-  const playerId = routeParams.playerId as string
-
-if (teamId) {
-    const { team: fetchedTeam, errorText: fetchedError1 } = await fetchTeamById(parseInt(teamId))
-
-    team.value = fetchedTeam
-    if (fetchedTeam) {
-      teamName.value = fetchedTeam.team_name
+    teamName.value = "Joukkue " + teamId
+    const { team } = await fetchTeamById(parseInt(teamId as string))
+    if (team) {
+      teamName.value = team.team_name
     }
-  }
+  },
+  { immediate: true }
+)
 
-  if (playerId) {
-    const { player: fetchedPlayer, errorText: fetchedError2 } = await fetchPlayerById(parseInt(playerId))
+watch(
+  () => route.params.playerId,
+  async (playerId) => {
+    playerName.value = ''
+    if (!playerId) return
 
-    player.value = fetchedPlayer
-    if (fetchedPlayer) {
-      playerName.value = fetchedPlayer.first_name + " " + fetchedPlayer.last_name
+    playerName.value = "Pelaaja " + playerId
+    const { player } = await fetchPlayerById(parseInt(playerId as string))
+    if (player) {
+      playerName.value = player.first_name + ' ' + player.last_name
     }
-  }
-  loading.value = false
-});
+  },
+  { immediate: true }
+)
 
 
 const items = computed<MenuItem[]>(() => {
@@ -95,12 +100,12 @@ const items = computed<MenuItem[]>(() => {
 
 <template>
   <div class="mb-8">
-    <Breadcrumb :model="items">
+    <Breadcrumb :model="items" class="bg-transparent">
 
 
 
       <template #item="{ item }">
-        <a class="rounded-lg p-3 bg-primary-200 dark:bg-surface-700 
+        <a class="rounded-lg p-3 bg-primary-100 dark:bg-surface-700 
         hover:bg-primary-300 dark:hover:bg-surface-600
         shadow-sm cursor-pointer" @click="(e) => item.command?.({ originalEvent: e, item })">
           <span>{{ item.label }}</span>

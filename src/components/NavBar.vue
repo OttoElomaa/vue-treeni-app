@@ -29,17 +29,18 @@ function goTo(mode: Mode) {
 
 <template>
     <nav class="sticky top-0 z-50">
-        <div class="flex items-center justify-between mx-auto p-5 bg-surface-100 dark:bg-surface-900">
+        <div class="flex items-center justify-between mx-auto p-2 
+        bg-surface-50 dark:bg-surface-950">
             <div>
                 <p class="text-3xl">Treeni App</p>
             </div>
             <div class="space-x-4">
-                <Button label="Intake" :severity="currentMode === 'intake' ? 'primary' : 'secondary'"
-                    @click="goTo('intake')" />
-                <Button label="Analyze" :severity="currentMode === 'analyze' ? 'primary' : 'secondary'"
-                    @click="goTo('analyze')" />
+                <Button label="Intake" class="p-4 pr-12 pl-12"
+                    :severity="currentMode === 'intake' ? 'primary' : 'secondary'" @click="goTo('intake')" />
+                <Button label="Analyze" class="p-4 pr-12 pl-12"
+                    :severity="currentMode === 'analyze' ? 'primary' : 'secondary'" @click="goTo('analyze')" />
             </div>
-            <Button severity="primary"  @click="toggleDark()">
+            <Button class="w-16" severity="primary" @click="toggleDark()">
                 {{ isDark ? '☀' : '☽' }}
             </Button>
         </div>

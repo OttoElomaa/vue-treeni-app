@@ -59,7 +59,7 @@ const routes: RouteRecordRaw[] = [
 		component: TeamIntake,
 		props: true,
 	},
-		{
+	{
 		path: "/intake/team/:teamId/add",
 		name: "team-intake-add-player",
 		component: AddPlayer,
