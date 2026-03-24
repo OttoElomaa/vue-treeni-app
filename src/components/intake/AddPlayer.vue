@@ -66,7 +66,7 @@ const onFormSubmit = () => {
 				</div>
 			</div>
 			<p v-if="isInvalidSubmit">Annetuissa tiedoissa on jokin ongelma, yritä uudestaan!</p>
-			<Button type="submit" severity="secondary" label="Submit" />
+			<Button type="submit" severity="primary" label="Submit" />
 		</Form>
 	</div>
 

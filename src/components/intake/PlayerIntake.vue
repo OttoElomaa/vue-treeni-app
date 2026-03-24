@@ -14,7 +14,6 @@ const props = defineProps<{
 const loading = ref(true)
 
 const player = ref();
-const errorText = ref("Loading...")
 const playerName = ref("")
 
 onMounted(async () => {
@@ -23,13 +22,11 @@ onMounted(async () => {
 
         // SUPABASE FETCH TEAM INFO
         const { player: fetchedPlayer, errorText: fetchedError2 } = await fetchPlayerById(props.playerId)
-        errorText.value = fetchedError2
         player.value = fetchedPlayer
         if (fetchedPlayer) {
                 playerName.value = fetchedPlayer.first_name + " " + fetchedPlayer.last_name
         }
         loading.value = false
-
 });
 
 
