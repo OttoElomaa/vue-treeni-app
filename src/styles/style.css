@@ -1,11 +1,27 @@
 @import "tailwindcss";
 @import "tailwindcss-primeui"; /* Bridges PrimeVue design tokens to Tailwind */
 
-/* Align Tailwind's 'dark:' variant with PrimeVue's selector */
 @custom-variant dark (&:where(.my-app-dark, .my-app-dark *));
 
-@layer base, primevue, utilities;
 
-@layer primevue {
-  /* PrimeVue styles will be injected here via the PrimeVue plugin */
+
+@layer base {
+  /* 2. Set the default light mode colors on the root */
+  html {
+    background-color: whitesmoke;
+    color: #18181b; /* zinc-900 */
+  }
+
+  /* 3. Force the dark mode colors when the .dark class is present */
+  html.my-app-dark {
+    background-color: #15212b;
+    color: #f4f4f5; /* zinc-100 */
+  }
+
+  /* 4. Ensure the body fills the screen and inherits the root colors */
+  body {
+    min-height: 100dvh;
+    margin: 0;
+    transition: background-color 0.2s, color 0.2s;
+  }
 }

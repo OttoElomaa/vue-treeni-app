@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import Menubar from 'primevue/menubar';
-import Button from 'primevue/button';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { isDark, toggleDark } from '../styles/darkmode';
-import { SelectButton } from 'primevue';
 import type { Mode } from '../types';
+import Button from '../volt/Button.vue';
 
 const route = useRoute();
 const router = useRouter();

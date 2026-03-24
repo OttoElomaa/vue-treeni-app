@@ -2,9 +2,10 @@
 import { computed, onMounted, ref } from 'vue';
 import { supabase } from '../../lib/supabase-client';
 import type { Player, Team } from '../../types';
-import { Button, Card } from 'primevue';
+import { Card } from 'primevue';
 import { fetchPlayersByTeamId, fetchTeamById, fetchTeams } from '../../databaseFunctions/fetch';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
+import Button from '../../volt/Button.vue';
 
 
 const props = defineProps<{

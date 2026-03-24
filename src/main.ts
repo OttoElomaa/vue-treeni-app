@@ -5,9 +5,8 @@ import router from "./router";
 import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
 import "./styles/style.css";
-import { MyCustomPreset } from "./styles/theme-config.ts";
-import Lara from "@primeuix/themes/lara";
-import Material from "@primeuix/themes/material";
+import "./styles/volt-base.css"
+
 
 console.log("Debug - Main.ts: Full pathname:", window.location.pathname);
 
@@ -15,18 +14,12 @@ const app = createApp(App) as any;
 
 app.use(router);
 app.use(PrimeVue, {
+	unstyled: true,
 	theme: {
-    preset: MyCustomPreset,
-		options: {
-			// Must match the valueDark from useDark above!
-			darkModeSelector: ".my-app-dark",
-			//cssLayer: false
-			cssLayer: {
-				name: "primevue",
-				order: "base, primevue, utilities",
-			},
-		},
-	},
+        options: {
+            darkModeSelector: '.my-app-dark'
+        }
+    }
 });
 
 app.mount("#app");

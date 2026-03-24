@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Breadcrumb, Button } from 'primevue'
 import type { MenuItem, MenuItemCommandEvent } from 'primevue/menuitem'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import Button from '../volt/Button.vue'
+import Breadcrumb from '../volt/Breadcrumb.vue'
 
 
 const route = useRoute()
@@ -57,10 +58,9 @@ const items = computed<MenuItem[]>(() => {
 
 <template>
   <div class="mb-8">
-    <Breadcrumb :model="items">
-      <template #item="{ item }">
-        <Button :label="item.label?.toString()" severity="secondary" rounded raised
-          @click="(e) => item.command?.({ originalEvent: e, item })" />
+    <Breadcrumb :model="items" class="flex-row">
+      <template #item="{ item }" class="flex">
+        <Button :label="item.label?.toString()" @click="(e) => item.command?.({ originalEvent: e, item })" />
       </template>
     </Breadcrumb>
   </div>
