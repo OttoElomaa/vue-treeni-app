@@ -54,7 +54,7 @@ const goToAddTeam = () => {
         <p>{{ errorText }}</p>
 
         <div class="flex-row">
-            <Button label="Add Player" @click="goToAddTeam" class="flex-none" />
+            <Button label="Uusi pelaaja" @click="goToAddTeam" class="flex-none" />
         </div>
 
         <div class="grid gap-4 grid-cols-1">

@@ -105,8 +105,8 @@ const items = computed<MenuItem[]>(() => {
 
 
       <template #item="{ item }">
-        <a class="rounded-lg p-3 bg-primary-100 dark:bg-surface-700 
-        hover:bg-primary-300 dark:hover:bg-surface-600
+        <a class="rounded-lg p-3 bg-primary-200 dark:bg-primary-800 
+        hover:bg-primary-300 dark:hover:bg-primary-600
         shadow-sm cursor-pointer" @click="(e) => item.command?.({ originalEvent: e, item })">
           <span>{{ item.label }}</span>
         </a>

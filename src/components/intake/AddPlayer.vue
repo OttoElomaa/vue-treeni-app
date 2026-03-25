@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { Form } from '@primevue/forms';
+import { Form, FormField, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { PlayerSchema } from '../../types';
+import { CreatePlayerSchema, type CreatePlayer } from '../../types';
 import { reactive, ref } from 'vue';
 import { Button, InputNumber, InputText, Message } from 'primevue';
 import MyIntakeErrorMessage from './MyIntakeErrorMessage.vue';
+import { insertPlayer } from '../../databaseFunctions/insert';
 
 
 const props = defineProps<{
@@ -12,18 +13,27 @@ const props = defineProps<{
 }>()
 
 
-const resolver = zodResolver(PlayerSchema);
+const resolver = zodResolver(CreatePlayerSchema);
 
 const initialValues = reactive({
-	id: null
+	team_id: parseInt(props.teamId.toString())
 });
 
 const testTestTest = ref(false)
 const isInvalidSubmit = ref(false)
 
-const onFormSubmit = () => {
-	testTestTest.value = true
-	isInvalidSubmit.value = true
+const onFormSubmit = (submitEvent: FormSubmitEvent) => {
+	console.log("Submit event data: ", submitEvent.values)
+	console.log("Valid: ", submitEvent.valid)
+	console.log("Errors: ", submitEvent.errors)
+	if (submitEvent.valid) {
+		insertPlayer(submitEvent.values as CreatePlayer)
+		submitEvent.reset()
+		isInvalidSubmit.value = false
+	} else {
+		isInvalidSubmit.value = true
+	}
+	
 }
 
 </script>
@@ -33,12 +43,17 @@ const onFormSubmit = () => {
 		<h1 class="text-2xl">Intake Screen - Add Player</h1>
 
 		<div v-if="testTestTest">
-			<p >Submitted!</p>
+			<p>Submitted!</p>
 		</div>
-		
+
 
 		<Form v-slot="$form" :initialValues :resolver="resolver" @submit="onFormSubmit" :validateOnValueUpdate="true"
 			class="flex flex-col gap-4">
+
+			<FormField name="team_id" v-slot="$field">
+				<input type="hidden" v-model="$field.value" />
+			</FormField>
+
 			<!-- First Name and Last name -->
 			<div class="flex flex-row gap-4">
 				<div class="flex flex-col gap-1">
@@ -53,11 +68,11 @@ const onFormSubmit = () => {
 			<!-- Birth Year, Month, Day -->
 			<div class="flex flex-row gap-4">
 				<div class="flex flex-col gap-1">
-					<InputNumber name="birth_day" placeholder="Syntymävuosi" :useGrouping="false" fluid />
+					<InputNumber name="birth_day" placeholder="Syntymäpäivä" :useGrouping="false" fluid />
 					<MyIntakeErrorMessage :inputValue="$form.birth_day" />
 				</div>
 				<div class="flex flex-col gap-1">
-					<InputNumber name="birth_month" placeholder="Syntymävuosi" :useGrouping="false" fluid />
+					<InputNumber name="birth_month" placeholder="Syntymäkuukausi" :useGrouping="false" fluid />
 					<MyIntakeErrorMessage :inputValue="$form.birth_month" />
 				</div>
 				<div class="flex flex-col gap-1">

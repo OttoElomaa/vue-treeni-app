@@ -34,4 +34,12 @@ export type Player = z.infer<typeof PlayerSchema>;
 
 
 
+// Create a version for the form that ignores the ID
+export const CreatePlayerSchema = PlayerSchema.omit({ id: true });
+
+export type CreatePlayer = z.infer<typeof CreatePlayerSchema>;
+
+
+
+
 export type Mode = "intake" | "analyze";
