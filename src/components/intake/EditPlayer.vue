@@ -3,12 +3,13 @@ import { Form, FormField, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { CreatePlayerSchema, PlayerSchema, type CreatePlayer, type Player } from '../../types';
 import { onMounted, reactive, ref } from 'vue';
-import { Button, InputNumber, InputText, Message } from 'primevue';
+import { Button, Card, InputNumber, InputText, Message } from 'primevue';
 import MyIntakeErrorMessage from './MyIntakeErrorMessage.vue';
 import { insertPlayer } from '../../databaseFunctions/insert';
 import { fetchPlayerById } from '../../databaseFunctions/fetch';
 import { updatePlayer } from '../../databaseFunctions/update';
 import router from '../../router';
+import { goToTeamView } from '../../router/routing';
 
 
 const props = defineProps<{
@@ -48,12 +49,14 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
 		updatePlayer(submitEvent.values as Player)
 		submitEvent.reset()
 		isInvalidSubmit.value = false
-		router.push(`/intake/team/${props.teamId}`)
+		goToTeamView(props.teamId)
 	} else {
 		isInvalidSubmit.value = true
 	}
 
 }
+
+
 
 </script>
 
@@ -64,11 +67,12 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
 		<p class="text-2xl">Loading...</p>
 	</div>
 
-	<div v-else>
+	<Card v-else>
 
 
-		<div class="grid gap-4 grid-cols-1">
-			<h1 class="text-2xl">Player Intake - Edit {{ playerName }}</h1>
+		<template #content class="grid gap-4 grid-cols-1">
+			<p class="text-xl">Muokkaa pelaajan tietoja</p>
+			<h1 class="text-4xl">{{ playerName }}</h1>
 
 			<div v-if="testTestTest">
 				<p>Submitted!</p>
@@ -112,11 +116,15 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
 					</div>
 				</div>
 				<p v-if="isInvalidSubmit">Annetuissa tiedoissa on jokin ongelma, yritä uudestaan!</p>
-				<Button type="submit" severity="primary" label="Submit" />
-			</Form>
-		</div>
+				<div class="flex flex-row gap-4">
+					<Button type="submit" severity="primary" label="Tallenna" />
+					<Button severity="secondary" label="Peruuta" @click="goToTeamView(props.teamId)" />
+				</div>
 
-	</div>
+			</Form>
+		</template>
+
+	</Card>
 
 
 </template>

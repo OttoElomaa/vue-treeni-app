@@ -68,13 +68,16 @@ const goToPlayer = (playerId: number) => {
         <div class="grid gap-4 grid-cols-1">
             <template v-for="player in players" :key="player.id">
 
-                <Card @click="goToPlayer(player.id)" class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-950">
-                    <template #title>{{ player.first_name }} {{ player.last_name }}</template>
+                <Card @click="goToPlayer(player.id)"
+                    class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">
                     <template #content>
                         <div class="flex flex-row gap-6">
-                            <p class="flex">Born {{ player.birth_year }}</p>
-                            <Button class="flex z-10" label="Muokkaa"
-                                @click.stop.prevent="goToEditPlayer(player)" />
+                            <div class="min-w-100">
+                                <p class="text-2xl">{{ player.first_name }} {{ player.last_name }}</p>
+                                <p>Born {{ player.birth_year }}</p>
+                            </div>
+
+                            <Button class="flex z-10" label="Muokkaa" @click.stop.prevent="goToEditPlayer(player)" />
                         </div>
                     </template>
                 </Card>
