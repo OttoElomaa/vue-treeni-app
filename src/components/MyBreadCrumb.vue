@@ -99,21 +99,21 @@ const items = computed<MenuItem[]>(() => {
 </script>
 
 <template>
-  <div class="mb-8">
-    <Breadcrumb :model="items" class="bg-transparent">
+
+  <Breadcrumb :model="items" class="bg-transparent">
 
 
 
-      <template #item="{ item }">
-        <a class="rounded-lg p-3 bg-primary-200 dark:bg-primary-800 
-        hover:bg-primary-300 dark:hover:bg-primary-600
+    <template #item="{ item }">
+      <a class="rounded-lg p-3 bg-primary-200 dark:bg-primary-800 
+        hover:bg-primary-300 dark:hover:bg-primary-600 transition-colors duration-500
         shadow-sm cursor-pointer" @click="(e) => item.command?.({ originalEvent: e, item })">
-          <span>{{ item.label }}</span>
-        </a>
-      </template>
+        <span>{{ item.label }}</span>
+      </a>
+    </template>
 
 
-    </Breadcrumb>
-  </div>
+  </Breadcrumb>
+
 
 </template>

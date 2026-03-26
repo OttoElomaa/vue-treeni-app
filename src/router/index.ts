@@ -13,6 +13,7 @@ import TeamIntake from "../components/intake/TeamIntake.vue";
 import PlayerIntake from "../components/intake/PlayerIntake.vue";
 import type { Mode } from "../types";
 import AddPlayer from "../components/intake/AddPlayer.vue";
+import EditPlayer from "../components/intake/EditPlayer.vue";
 
 // ─── Types ───────────────────────────────────────────────────────
 
@@ -71,6 +72,12 @@ const routes: RouteRecordRaw[] = [
 		component: PlayerIntake,
 		props: true,
 	},
+	{
+		path: "/intake/team/:teamId/player/:playerId/edit",
+		name: "player-edit",
+		component: EditPlayer,
+		props: true,
+	},
 
 	// ── Fallbacks ────────────────────────────────────────────────
 	// Valid mode but unrecognized path → back to that mode's org page
@@ -95,23 +102,23 @@ const router = createRouter({
 	routes,
 });
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach((to, _from) => {
 	console.log("Navigating to:", {
 		path: to.path,
 		name: to.name,
 		params: to.params,
 		matched: to.matched.map((m) => m.path),
 	});
-	next();
+	return;
 });
 
 // Normalize uppercase anywhere in the URL
-router.beforeEach((to, _from, next) => {
+router.beforeEach((to, _from) => {
 	const lowercased = to.path.toLowerCase();
 	if (lowercased !== to.path) {
-		return next(lowercased);
+		return lowercased;
 	}
-	next();
+	return;
 });
 
 export default router;

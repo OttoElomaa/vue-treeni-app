@@ -36,8 +36,16 @@ onMounted(async () => {
 
 });
 
-const goToAddTeam = () => {
+const goToAddPlayer = () => {
     router.push(`/intake/team/${props.teamId}/add`)
+}
+
+const goToEditPlayer = (player: Player) => {
+    router.push(`/intake/team/${props.teamId}/player/${player.id}/edit`)
+}
+
+const goToPlayer = (playerId: number) => {
+    router.push(`/intake/team/${props.teamId}/player/${playerId}`)
 }
 
 </script>
@@ -54,18 +62,23 @@ const goToAddTeam = () => {
         <p>{{ errorText }}</p>
 
         <div class="flex-row">
-            <Button label="Uusi pelaaja" @click="goToAddTeam" class="flex-none" />
+            <Button label="Uusi pelaaja" @click="goToAddPlayer" class="flex-none" />
         </div>
 
         <div class="grid gap-4 grid-cols-1">
-            <RouterLink v-for="player in players" :key="player.id"
-                :to="`/intake/team/${props.teamId}/player/${player.id}`" class="card-link">
+            <template v-for="player in players" :key="player.id">
 
-                <Card>
+                <Card @click="goToPlayer(player.id)" class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-950">
                     <template #title>{{ player.first_name }} {{ player.last_name }}</template>
-                    <template #content>Born {{ player.birth_year }}</template>
+                    <template #content>
+                        <div class="flex flex-row gap-6">
+                            <p class="flex">Born {{ player.birth_year }}</p>
+                            <Button class="flex z-10" label="Muokkaa"
+                                @click.stop.prevent="goToEditPlayer(player)" />
+                        </div>
+                    </template>
                 </Card>
-            </RouterLink>
+            </template>
         </div>
 
     </div>
