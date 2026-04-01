@@ -22,8 +22,6 @@ const playerName = ref("")
 const loading = ref(true)
 
 onMounted(async () => {
-
-
 	const { player: fetchedPlayer, errorText: fetchedError } = await fetchPlayerById(props.playerId)
 	player.value = fetchedPlayer as Player
 	if (fetchedPlayer) {
@@ -55,9 +53,6 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
 	}
 
 }
-
-
-
 </script>
 
 <template>

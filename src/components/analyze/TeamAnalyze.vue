@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { supabase } from '../../lib/supabase-client';
 import type { Player, Team } from '../../types';
-import { Card } from 'primevue';
+import { Card, Column, DataTable } from 'primevue';
 import { fetchPlayersByTeamId, fetchTeamById, fetchTeams } from '../../databaseFunctions/fetch';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 
@@ -47,16 +47,11 @@ onMounted(async () => {
 
         <p>{{ errorText }}</p>
 
-        <div class="grid gap-4 grid-cols-1">
-            <RouterLink v-for="player in players" :key="player.id"
-                :to="`/analyze/team/${props.teamId}/player/${player.id}`" class="card-link">
-
-                <Card>
-                    <template #title>{{ player.first_name }} {{ player.last_name }}</template>
-                    <template #content>Born {{ player.birth_year }}</template>
-                </Card>
-            </RouterLink>
-        </div>
+        <DataTable :value="players" tableStyle="min-width: 50rem">
+            <Column field="first_name" header="First Name"></Column>
+            <Column field="last_name" header="Last Name"></Column>
+            <Column field="birth_year" header="Birth year"></Column>
+        </DataTable>
     </div>
 
 
