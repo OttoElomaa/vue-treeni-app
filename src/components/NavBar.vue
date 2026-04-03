@@ -6,6 +6,8 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { isDark, toggleDark } from '../styles/darkmode';
 import { SelectButton } from 'primevue';
 import type { Mode } from '../types';
+import AuthNavBarComp from './nav/AuthNavBarComp.vue';
+
 
 const route = useRoute();
 const router = useRouter();
@@ -40,9 +42,12 @@ function goTo(mode: Mode) {
                 <Button label="Analyze" class="p-4 pr-12 pl-12"
                     :severity="currentMode === 'analyze' ? 'primary' : 'secondary'" @click="goTo('analyze')" />
             </div>
-            <Button class="w-16" severity="primary" @click="toggleDark()">
-                {{ isDark ? '☀' : '☽' }}
-            </Button>
+            <div class="flex space-x-4">
+                <AuthNavBarComp/>
+                <Button class="w-16" severity="primary" @click="toggleDark()">
+                    {{ isDark ? '☀' : '☽' }}
+                </Button>
+            </div>
         </div>
 
     </nav>
