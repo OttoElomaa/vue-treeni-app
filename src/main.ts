@@ -1,22 +1,23 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
+import { createPinia } from "pinia";
 // UI Stuff
 import PrimeVue from "primevue/config";
-import Aura from "@primeuix/themes/aura";
+//import Aura from "@primeuix/themes/aura";
 import "./styles/style.css";
 import { MyCustomPreset } from "./styles/theme-config.ts";
-import Lara from "@primeuix/themes/lara";
-import Material from "@primeuix/themes/material";
 
 console.log("Debug - Main.ts: Full pathname:", window.location.pathname);
 
 const app = createApp(App) as any;
+const pinia = createPinia();
 
 app.use(router);
+app.use(pinia);
 app.use(PrimeVue, {
 	theme: {
-    preset: MyCustomPreset,
+		preset: MyCustomPreset,
 		options: {
 			// Must match the valueDark from useDark above!
 			darkModeSelector: ".my-app-dark",

@@ -5,16 +5,15 @@ import type { Team } from '../../types';
 import { Card } from 'primevue';
 import { fetchTeams } from '../../databaseFunctions/fetch';
 import { RouterLink } from 'vue-router';
+import { useTeamStore } from '../../stores/teamStore';
 
 
 
-const teams = ref([] as Team[]);
-const errorText = ref("Loading...")
+const teamStore = useTeamStore()
 
 onMounted(async () => {
-    const { teams: fetchedTeams, errorText: fetchedError } = await fetchTeams();
-    teams.value = fetchedTeams
-    errorText.value = fetchedError
+    teamStore.fetchTeams();
+    
 });
 
 </script>
@@ -23,10 +22,10 @@ onMounted(async () => {
     <div class="grid gap-4 grid-cols-1">
         <h1 class="text-4xl">Org Analyze Screen</h1>
 
-        <p>{{ errorText }}</p>
+        <p>{{ teamStore.errorText }}</p>
 
         <div class="grid gap-4 grid-cols-1">
-            <RouterLink v-for="team in teams" :key="team.id" :to="`/analyze/team/${team.id}`" class="card-link">
+            <RouterLink v-for="team in teamStore.teams" :key="team.id" :to="`/analyze/team/${team.id}`" class="card-link">
 
                 <Card>
                     <template #title>{{ team.team_name }}</template>
