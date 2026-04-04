@@ -40,6 +40,9 @@ onMounted(async () => {
     <div v-if="loading">
         <p class="text-2xl">Loading...</p>
     </div>
+    <div v-if="errorText != ''">
+        <p>{{ errorText }}</p>
+    </div>
     <div v-else class="grid gap-4 grid-cols-1">
 
         <p class="text-2xl">Team Analyze Screen</p>

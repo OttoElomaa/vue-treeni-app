@@ -54,12 +54,13 @@ const goToPlayer = (playerId: number) => {
     <div v-if="loading">
         <p class="text-2xl">Loading...</p>
     </div>
+    <div v-if="errorText != ''">
+        <p>{{ errorText }}</p>
+    </div>
     <div v-else class="grid gap-4 grid-cols-1">
 
         <p class="text-2xl">Team Intake Screen</p>
         <h1 class="text-4xl">{{ teamName }}</h1>
-
-        <p>{{ errorText }}</p>
 
         <div class="flex-row">
             <Button label="Uusi pelaaja" @click="goToAddPlayer" class="flex-none" />
