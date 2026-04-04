@@ -1,7 +1,18 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import NavBar from './components/NavBar.vue';
-import MyBreadCrumb from './components/MyBreadCrumb.vue';
+import NavBar from './components/nav/NavBar.vue';
+import MyBreadCrumb from './components/nav/MyBreadCrumb.vue';
+import { onMounted } from 'vue';
+import { usePlayerStore } from './stores/playerStore';
+
+
+const playerStore = usePlayerStore()
+
+// FOLLOW ALL Player Store UPDATES
+onMounted(() => {
+        playerStore.initRealtime()
+})
+
 </script>
 
 <template>

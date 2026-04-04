@@ -4,7 +4,7 @@ import type { MenuItem, MenuItemCommandEvent } from 'primevue/menuitem'
 import { onMounted, ref, watch } from 'vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { fetchPlayerById, fetchTeamById } from '../databaseFunctions/fetch'
+import { fetchPlayerById, fetchTeamById } from '../../databaseFunctions/fetch'
 
 
 const route = useRoute()

@@ -20,5 +20,12 @@ export const useAuthStore = defineStore("auth", () => {
 		if (error) console.error("Login failed:", error.message);
 	}
 
-	return { user, devLogin };
+	async function signOut() {
+		const { error } = await supabase.auth.signOut();
+		if (!error) {
+			user.value = null as unknown as User;
+		}
+	}
+
+	return { user, devLogin, signOut };
 });

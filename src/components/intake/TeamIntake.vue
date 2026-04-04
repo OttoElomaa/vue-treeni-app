@@ -5,6 +5,8 @@ import type { Player, Team } from '../../types';
 import { Button, Card } from 'primevue';
 import { fetchPlayersByTeamId, fetchTeamById, fetchTeams } from '../../databaseFunctions/fetch';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { usePlayerStore } from '../../stores/playerStore';
+import { useTeamStore } from '../../stores/teamStore';
 
 
 const props = defineProps<{
@@ -14,26 +16,18 @@ const props = defineProps<{
 const route = useRoute()
 const router = useRouter()
 
-const loading = ref(true)
+const playerStore = usePlayerStore()
+const teamStore = useTeamStore()
 
-const players = ref([] as Player[]);
-const errorText = ref("Loading...")
-const team = ref()
 const teamName = ref("")
+
 
 onMounted(async () => {
     // SUPABASE FETCH TEAM'S PLAYERS
-    const { players: fetchedPlayers, errorText: fetchedError } = await fetchPlayersByTeamId(props.teamId);
-    players.value = fetchedPlayers
-    errorText.value = fetchedError
+    playerStore.fetchPlayersByTeamId(props.teamId);
     // SUPABASE FETCH TEAM INFO
-    const { team: fetchedTeam, errorText: fetchedError2 } = await fetchTeamById(props.teamId)
-    team.value = fetchedTeam
-    if (fetchedTeam) {
-        teamName.value = fetchedTeam.team_name
-    }
-    loading.value = false
-
+    teamStore.fetchTeamById(props.teamId)
+    teamName.value = await teamStore.getTeamName(props.teamId)
 });
 
 const goToAddPlayer = () => {
@@ -51,11 +45,11 @@ const goToPlayer = (playerId: number) => {
 </script>
 
 <template>
-    <div v-if="loading">
+    <div v-if="playerStore.isLoading">
         <p class="text-2xl">Loading...</p>
     </div>
-    <div v-if="errorText != ''">
-        <p>{{ errorText }}</p>
+    <div v-if="playerStore.errorText != ''">
+        <p>{{ playerStore.errorText }}</p>
     </div>
     <div v-else class="grid gap-4 grid-cols-1">
 
@@ -67,7 +61,7 @@ const goToPlayer = (playerId: number) => {
         </div>
 
         <div class="grid gap-4 grid-cols-1">
-            <template v-for="player in players" :key="player.id">
+            <template v-for="player in playerStore.players" :key="player.id">
 
                 <Card @click="goToPlayer(player.id)"
                     class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">

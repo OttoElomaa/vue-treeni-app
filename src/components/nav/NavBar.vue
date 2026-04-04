@@ -3,10 +3,13 @@ import { computed, ref } from 'vue';
 import Menubar from 'primevue/menubar';
 import Button from 'primevue/button';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { isDark, toggleDark } from '../styles/darkmode';
+import { isDark, toggleDark } from '../../styles/darkmode';
 import { SelectButton } from 'primevue';
-import type { Mode } from '../types';
-import AuthNavBarComp from './nav/AuthNavBarComp.vue';
+import type { Mode } from '../../types';
+import AuthNavBarComp from './AuthNavBarComp.vue';
+import { useTeamStore } from '../../stores/teamStore';
+import { usePlayerStore } from '../../stores/playerStore';
+import { useAuthStore } from '../../stores/authStore';
 
 
 const route = useRoute();
@@ -22,7 +25,6 @@ function goTo(mode: Mode) {
     const rest = route.path.split('/').slice(2).join('/')
     router.push(`/${mode}/${rest}`)
 }
-
 
 </script>
 
