@@ -6,12 +6,6 @@ import { onMounted } from 'vue';
 import { usePlayerStore } from './stores/playerStore';
 
 
-const playerStore = usePlayerStore()
-
-// FOLLOW ALL Player Store UPDATES
-onMounted(() => {
-        playerStore.initRealtime()
-})
 
 </script>
 

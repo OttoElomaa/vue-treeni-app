@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import type { Team } from '../../types';
-import { fetchTeams } from '../../databaseFunctions/fetch';
 import { Card } from 'primevue';
 import { RouterLink } from 'vue-router';
 import { useTeamStore } from '../../stores/teamStore';

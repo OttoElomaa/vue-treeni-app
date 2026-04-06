@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { supabase } from "../lib/supabase-client";
-import type { Player } from "../types";
+import type { CreatePlayer, Player } from "../types";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export const usePlayerStore = defineStore("players", () => {
@@ -68,7 +68,7 @@ export const usePlayerStore = defineStore("players", () => {
       case "INSERT":
         players.value.push(newItem);
         console.log("PlayerStore insert completed");
-		break
+        break;
 
       // UPDATE PLAYERS TABLE BY ADDING THE NEW PLAYER
       case "UPDATE":
@@ -76,11 +76,12 @@ export const usePlayerStore = defineStore("players", () => {
           p.id === newItem.id ? newItem : p,
         );
         console.log("PlayerStore update completed");
-		break
+        break;
     }
   }
 
   const fetchPlayersByTeamId = async (id: number) => {
+    let fetchedPlayers = [] as Player[];
     const { error, data } = await supabase
       .from("players")
       .select("*")
@@ -99,15 +100,77 @@ export const usePlayerStore = defineStore("players", () => {
       );
       errorText.value = "No data was returned. Are you logged in?";
     } else {
-      players.value = data;
+      fetchedPlayers = data as Player[];
+      players.value = fetchedPlayers;
       console.log(data);
       errorText.value = "";
       loadedTeamIds.value.add(id);
-	  console.log("Loaded teams:");
-	  
-	  console.log(loadedTeamIds)
+      console.log("Loaded teams:");
+
+      console.log(loadedTeamIds);
     }
-    return { players: players, errorText: errorText };
+    return { players: fetchedPlayers, errorText: errorText.value };
+  };
+
+  const fetchPlayerById = async (id: number) => {
+    let players = [] as Player[];
+    let errorText = "Loading...";
+
+    const { error, data } = await supabase
+      .from("players")
+      .select("*")
+      .eq("id", id)
+      .order("id", { ascending: true });
+
+    if (error) {
+      console.error("Error in supabase player select by ID: ", error.message);
+      errorText = "Error in supabase player select by ID";
+    } else if (data.length == 0) {
+      console.error(
+        "Error in supabase select: No data was returned. Are you logged in?",
+      );
+      errorText = "No data was returned. Are you logged in?";
+    } else {
+      players = data;
+      console.log(data);
+      errorText = "";
+    }
+    return { player: players[0], errorText: errorText };
+  };
+
+  const insertPlayer = async (playerData: CreatePlayer) => {
+    let player = playerData;
+    let errorText = "Loading...";
+
+    const { error } = await supabase.from("players").insert(player).single();
+
+    if (error) {
+      console.error("Error in supabase player insert: ", error.message);
+      errorText = "Error in supabase player insert";
+    } else {
+      console.log("Inserted: ", player);
+      errorText = "";
+    }
+    return { player: player, errorText: errorText };
+  };
+
+  const updatePlayer = async (playerData: Player) => {
+    let player = playerData;
+    let errorText = "Loading...";
+
+    const { error } = await supabase
+      .from("players")
+      .update(player)
+      .eq("id", player.id);
+
+    if (error) {
+      console.error("Error in supabase player insert: ", error.message);
+      errorText = "Error in supabase player insert";
+    } else {
+      console.log("Inserted: ", player);
+      errorText = "";
+    }
+    return { player: player, errorText: errorText };
   };
 
   function clearStore() {
@@ -124,6 +187,9 @@ export const usePlayerStore = defineStore("players", () => {
     isLoading,
     errorText,
     fetchPlayersByTeamId,
+    fetchPlayerById,
+    insertPlayer,
+    updatePlayer,
     initRealtime,
     clearStore,
   };

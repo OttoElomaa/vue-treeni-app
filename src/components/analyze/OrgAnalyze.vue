@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { supabase } from '../../lib/supabase-client';
-import type { Team } from '../../types';
 import { Card } from 'primevue';
-import { fetchTeams } from '../../databaseFunctions/fetch';
 import { RouterLink } from 'vue-router';
 import { useTeamStore } from '../../stores/teamStore';
 

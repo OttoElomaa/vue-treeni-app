@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, Text } from 'vue';
-import type { Player } from '../../types';
-import { fetchPlayerById } from '../../databaseFunctions/fetch';
+import { onMounted, ref } from 'vue';
+import { usePlayerStore } from '../../stores/playerStore';
 
 
 
+const playerStore = usePlayerStore()
 
 const props = defineProps<{
         teamId: number,
@@ -22,7 +22,7 @@ onMounted(async () => {
 
 
         // SUPABASE FETCH TEAM INFO
-        const { player: fetchedPlayer, errorText: fetchedError2 } = await fetchPlayerById(props.playerId)
+        const { player: fetchedPlayer, errorText: fetchedError2 } = await playerStore.fetchPlayerById(props.playerId)
         errorText.value = fetchedError2
         player.value = fetchedPlayer
         if (fetchedPlayer) {

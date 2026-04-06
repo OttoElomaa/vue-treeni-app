@@ -4,11 +4,15 @@ import type { MenuItem, MenuItemCommandEvent } from 'primevue/menuitem'
 import { onMounted, ref, watch } from 'vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { fetchPlayerById, fetchTeamById } from '../../databaseFunctions/fetch'
+import { usePlayerStore } from '../../stores/playerStore'
+import { useTeamStore } from '../../stores/teamStore'
 
 
 const route = useRoute()
 const router = useRouter()
+
+const playerStore = usePlayerStore()
+const teamStore = useTeamStore()
 
 const routeParams = route.params
 const loading = ref(true)
@@ -38,7 +42,7 @@ watch(
     if (!teamId) return
 
     teamName.value = "Joukkue " + teamId
-    const { team } = await fetchTeamById(parseInt(teamId as string))
+    const { team } = await teamStore.fetchTeamById(parseInt(teamId as string))
     if (team) {
       teamName.value = team.team_name
     }
@@ -53,7 +57,7 @@ watch(
     if (!playerId) return
 
     playerName.value = "Pelaaja " + playerId
-    const { player } = await fetchPlayerById(parseInt(playerId as string))
+    const { player } = await playerStore.fetchPlayerById(parseInt(playerId as string))
     if (player) {
       playerName.value = player.first_name + ' ' + player.last_name
     }

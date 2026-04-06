@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import Menubar from 'primevue/menubar';
 import Button from 'primevue/button';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { isDark, toggleDark } from '../../styles/darkmode';
-import { SelectButton } from 'primevue';
 import type { Mode } from '../../types';
 import AuthNavBarComp from './AuthNavBarComp.vue';
-import { useTeamStore } from '../../stores/teamStore';
-import { usePlayerStore } from '../../stores/playerStore';
-import { useAuthStore } from '../../stores/authStore';
+
 
 
 const route = useRoute();

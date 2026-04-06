@@ -1,35 +1,35 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { supabase } from '../../lib/supabase-client';
-import type { Player, Team } from '../../types';
-import { Card, Column, DataTable } from 'primevue';
-import { fetchPlayersByTeamId, fetchTeamById, fetchTeams } from '../../databaseFunctions/fetch';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue';
 
+import type { Player, Team } from '../../types';
+import { Column, DataTable } from 'primevue';
+import { usePlayerStore } from '../../stores/playerStore';
+import { useTeamStore } from '../../stores/teamStore';
+
+
+
+const playerStore = usePlayerStore()
+const teamStore = useTeamStore()
 
 const props = defineProps<{
-    teamId: number
+    teamId: string
 }>()
 
 const loading = ref(true)
 
 const players = ref([] as Player[]);
-const errorText = ref("Loading...")
+const errorText = ref("")
 const team = ref()
 const teamName = ref("")
 
 onMounted(async () => {
     // SUPABASE FETCH TEAM'S PLAYERS
-    const { players: fetchedPlayers, errorText: fetchedError } = await fetchPlayersByTeamId(props.teamId);
+    const {players: fetchedPlayers, errorText: fetchedError} = await playerStore.fetchPlayersByTeamId(Number(props.teamId));
     players.value = fetchedPlayers
     errorText.value = fetchedError
-
     // SUPABASE FETCH TEAM INFO
-    const { team: fetchedTeam, errorText: fetchedError2 } = await fetchTeamById(props.teamId)
-    team.value = fetchedTeam
-    if (fetchedTeam) {
-        teamName.value = fetchedTeam.team_name
-    }
+    await teamStore.fetchTeamById(Number(props.teamId))
+    
     loading.value = false
 
 });
@@ -41,7 +41,7 @@ onMounted(async () => {
         <p class="text-2xl">Loading...</p>
     </div>
     <div v-if="errorText != ''">
-        <p>{{ errorText }}</p>
+        <p>Error: {{ errorText }}</p>
     </div>
     <div v-else class="grid gap-4 grid-cols-1">
 

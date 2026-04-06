@@ -5,9 +5,12 @@ import { CreatePlayerSchema, type CreatePlayer } from '../../types';
 import { reactive, ref } from 'vue';
 import { Button, Card, InputNumber, InputText, Message } from 'primevue';
 import MyIntakeErrorMessage from './MyIntakeErrorMessage.vue';
-import { insertPlayer } from '../../databaseFunctions/insert';
 import { goToTeamView } from '../../router/routing';
+import { usePlayerStore } from '../../stores/playerStore';
 
+
+
+const playerStore = usePlayerStore()
 
 const props = defineProps<{
 	teamId: number
@@ -28,7 +31,7 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
 	console.log("Valid: ", submitEvent.valid)
 	console.log("Errors: ", submitEvent.errors)
 	if (submitEvent.valid) {
-		insertPlayer(submitEvent.values as CreatePlayer)
+		playerStore.insertPlayer(submitEvent.values as CreatePlayer)
 		submitEvent.reset()
 		isInvalidSubmit.value = false
 		submitSucceeded.value = true

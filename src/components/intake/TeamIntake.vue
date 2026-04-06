@@ -3,7 +3,6 @@ import { computed, onMounted, ref } from 'vue';
 import { supabase } from '../../lib/supabase-client';
 import type { Player, Team } from '../../types';
 import { Button, Card } from 'primevue';
-import { fetchPlayersByTeamId, fetchTeamById, fetchTeams } from '../../databaseFunctions/fetch';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { usePlayerStore } from '../../stores/playerStore';
 import { useTeamStore } from '../../stores/teamStore';

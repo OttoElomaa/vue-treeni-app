@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { Form, FormField, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { CreatePlayerSchema, PlayerSchema, type CreatePlayer, type Player } from '../../types';
-import { onMounted, reactive, ref } from 'vue';
-import { Button, Card, InputNumber, InputText, Message } from 'primevue';
+import { PlayerSchema, type Player } from '../../types';
+import { onMounted, ref } from 'vue';
+import { Button, Card, InputNumber, InputText } from 'primevue';
 import MyIntakeErrorMessage from './MyIntakeErrorMessage.vue';
-import { insertPlayer } from '../../databaseFunctions/insert';
-import { fetchPlayerById } from '../../databaseFunctions/fetch';
-import { updatePlayer } from '../../databaseFunctions/update';
-import router from '../../router';
 import { goToTeamView } from '../../router/routing';
+import { usePlayerStore } from '../../stores/playerStore';
+
+
+
+const playerStore = usePlayerStore()
 
 
 const props = defineProps<{
@@ -17,18 +18,14 @@ const props = defineProps<{
 	playerId: number
 }>()
 
-const player = ref({} as Player)
 const playerName = ref("")
-const loading = ref(true)
 
 onMounted(async () => {
-	const { player: fetchedPlayer, errorText: fetchedError } = await fetchPlayerById(props.playerId)
-	player.value = fetchedPlayer as Player
-	if (fetchedPlayer) {
-		playerName.value = fetchedPlayer.first_name + " " + fetchedPlayer.last_name
-	}
-	initialValues.value = player.value
-	loading.value = false
+	isLoading.value = true
+	const {player: fetchedPlayer, errorText} = await playerStore.fetchPlayerById(props.playerId)
+	initialValues.value = fetchedPlayer as Player
+	playerName.value = initialValues.value.first_name + " " + initialValues.value.last_name
+	isLoading.value = false
 });
 
 
@@ -36,18 +33,20 @@ const resolver = zodResolver(PlayerSchema);
 
 const initialValues = ref({} as Player);
 
-const testTestTest = ref(false)
+const submissionDone = ref(false)
 const isInvalidSubmit = ref(false)
+const isLoading = ref(false)
 
 const onFormSubmit = (submitEvent: FormSubmitEvent) => {
 	console.log("Submit event data: ", submitEvent.values)
 	console.log("Valid: ", submitEvent.valid)
 	console.log("Errors: ", submitEvent.errors)
 	if (submitEvent.valid) {
-		updatePlayer(submitEvent.values as Player)
+		playerStore.updatePlayer(submitEvent.values as Player)
 		submitEvent.reset()
 		isInvalidSubmit.value = false
 		goToTeamView(props.teamId)
+		submissionDone.value = true
 	} else {
 		isInvalidSubmit.value = true
 	}
@@ -58,7 +57,7 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
 <template>
 
 
-	<div v-if="loading">
+	<div v-if="isLoading">
 		<p class="text-2xl">Loading...</p>
 	</div>
 
@@ -68,11 +67,6 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
 		<template #content class="grid gap-4 grid-cols-1">
 			<p class="text-xl">Muokkaa pelaajan tietoja</p>
 			<h1 class="text-4xl">{{ playerName }}</h1>
-
-			<div v-if="testTestTest">
-				<p>Submitted!</p>
-			</div>
-
 
 			<Form v-slot="$form" :initialValues :resolver="resolver" @submit="onFormSubmit"
 				:validateOnValueUpdate="true" class="flex flex-col gap-4">
