@@ -21,11 +21,16 @@ const handleLogout = async () => {
 	console.log('Stores cleared and logged out')
 }
 
+const handleLogin = () => {
+	auth.devLogin()
+	playerStore.initRealtime()
+}
+
 </script>
 
 <template>
 	<div v-if="!auth.user">
-		<Button @click="auth.devLogin">Dev Admin Login</Button>
+		<Button @click="handleLogin">Dev Admin Login</Button>
 	</div>
 	<div v-else class="flex">
 		<div class="flex flex-col">

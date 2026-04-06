@@ -19,12 +19,20 @@ export const usePlayerStore = defineStore("players", () => {
 	function initRealtime() {
 		if (playerChannel) return;
 
-		playerChannel = supabase
-			.channel("all-player-changes")
+		playerChannel = supabase.channel("all-player-changes");
+
+		playerChannel
 			.on(
 				"postgres_changes",
-				{ event: "*", schema: "public", table: "players" },
+				{
+					event: "*",
+					schema: "public",
+					table: "players",
+				},
 				(payload) => {
+					console.log("Player Store Realtime:")
+					console.log(payload);
+
 					const { eventType, new: newItem, old: oldItem } = payload;
 
 					const newPlayer = newItem as Player;
@@ -39,7 +47,19 @@ export const usePlayerStore = defineStore("players", () => {
 					}
 				},
 			)
-			.subscribe();
+			.subscribe((status, err) => {
+				console.log("REALTIME STATUS:", status);
+				if (err) console.error("REALTIME ERROR:", err);
+
+				if (status === "CHANNEL_ERROR") {
+					console.error(
+						"Check if RLS is blocking the initial connection or if the table is in the publication.",
+					);
+				}
+				if (status === "TIMED_OUT") {
+					console.error("Network issue or Supabase service hiccup.");
+				}
+			});
 	}
 
 	function handleSync(type: myEventType, newItem: Player, oldItem: Player) {
@@ -72,11 +92,10 @@ export const usePlayerStore = defineStore("players", () => {
 			players.value = data;
 			console.log(data);
 			errorText.value = "";
-			loadedTeamIds.value.add(id)
+			loadedTeamIds.value.add(id);
 		}
 		return { players: players, errorText: errorText };
 	};
-
 
 	function clearStore() {
 		players.value = [];
@@ -87,5 +106,12 @@ export const usePlayerStore = defineStore("players", () => {
 		}
 	}
 
-	return { players, isLoading, errorText, fetchPlayersByTeamId, initRealtime, clearStore };
+	return {
+		players,
+		isLoading,
+		errorText,
+		fetchPlayersByTeamId,
+		initRealtime,
+		clearStore,
+	};
 });
