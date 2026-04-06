@@ -10,7 +10,7 @@ import { useTeamStore } from '../../stores/teamStore';
 
 
 const props = defineProps<{
-    teamId: number
+    teamId: string
 }>()
 
 const route = useRoute()
@@ -24,10 +24,10 @@ const teamName = ref("")
 
 onMounted(async () => {
     // SUPABASE FETCH TEAM'S PLAYERS
-    playerStore.fetchPlayersByTeamId(props.teamId);
+    playerStore.fetchPlayersByTeamId(Number(props.teamId));
     // SUPABASE FETCH TEAM INFO
-    teamStore.fetchTeamById(props.teamId)
-    teamName.value = await teamStore.getTeamName(props.teamId)
+    teamStore.fetchTeamById(Number(props.teamId))
+    teamName.value = await teamStore.getTeamName(Number(props.teamId))
 });
 
 const goToAddPlayer = () => {

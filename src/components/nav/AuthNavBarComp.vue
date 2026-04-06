@@ -3,6 +3,7 @@ import { Button } from 'primevue';
 import { useAuthStore } from '../../stores/authStore';
 import { useTeamStore } from '../../stores/teamStore';
 import { usePlayerStore } from '../../stores/playerStore';
+import { supabase } from '../../lib/supabase-client';
 
 
 const auth = useAuthStore()
@@ -10,33 +11,32 @@ const teamStore = useTeamStore()
 const playerStore = usePlayerStore()
 
 
-const handleLogout = async () => {
-	// 1. Kill the Supabase session
-	await auth.signOut()
 
-	teamStore.clearStore()
-	playerStore.clearStore()
+supabase.auth.onAuthStateChange((event, session) => {
+	// USER LOGGED IN
+	if (event === 'SIGNED_IN' && session) {
+		playerStore.initRealtime()
+	}
+	// USER LOGGED OUT
+	if (event === 'SIGNED_OUT') {
+		teamStore.clearStore()
+		playerStore.clearStore()
+		console.log('Stores cleared and logged out')
+	}
+})
 
-	//router.push('/login')
-	console.log('Stores cleared and logged out')
-}
-
-const handleLogin = () => {
-	auth.devLogin()
-	playerStore.initRealtime()
-}
 
 </script>
 
 <template>
 	<div v-if="!auth.user">
-		<Button @click="handleLogin">Dev Admin Login</Button>
+		<Button @click="auth.devLogin()">Dev Admin Login</Button>
 	</div>
 	<div v-else class="flex">
 		<div class="flex flex-col">
 			<p>Logged in as: </p>
 			<p>{{ auth.user.email }}</p>
 		</div>
-		<Button @click="handleLogout">Logout</Button>
+		<Button @click="auth.signOut()">Logout</Button>
 	</div>
 </template>

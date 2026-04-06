@@ -9,6 +9,8 @@ export const useAuthStore = defineStore("auth", () => {
 	const email = import.meta.env.VITE_DEV_LOGIN_EMAIL;
 	const pw = import.meta.env.VITE_DEV_LOGIN_PASSWORD;
 
+	
+	
 	async function devLogin() {
 		// Hardcoded for dev phase - move these to .env later!
 		const { data, error } = await supabase.auth.signInWithPassword({
