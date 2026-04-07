@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { supabase } from "../lib/supabase-client";
 import type { CreatePlayer, Player } from "../types";
 import type { RealtimeChannel } from "@supabase/supabase-js";
@@ -112,6 +112,12 @@ export const usePlayerStore = defineStore("players", () => {
     return { players: fetchedPlayers, errorText: errorText.value };
   };
 
+  const getPlayersByTeam = (teamId: number) => {
+    return computed(() => {
+      return players.value.filter((p) => p.team_id === teamId);
+    });
+  };
+
   const fetchPlayerById = async (id: number) => {
     let players = [] as Player[];
     let errorText = "Loading...";
@@ -175,6 +181,7 @@ export const usePlayerStore = defineStore("players", () => {
 
   function clearStore() {
     players.value = [];
+    loadedTeamIds.value = new Set();
     // Don't forget to kill the Realtime channel too!
     if (playerChannel) {
       supabase.removeChannel(playerChannel);
@@ -187,6 +194,7 @@ export const usePlayerStore = defineStore("players", () => {
     isLoading,
     errorText,
     fetchPlayersByTeamId,
+    getPlayersByTeam,
     fetchPlayerById,
     insertPlayer,
     updatePlayer,

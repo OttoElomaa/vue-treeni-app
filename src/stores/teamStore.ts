@@ -69,6 +69,8 @@ export const useTeamStore = defineStore("teams", () => {
 		if (!foundTeam) {
 			const { team, errorText } = await fetchTeamById(id);
 			foundTeam = team as Team;
+			console.log("Team name loaded: " + foundTeam.team_name);
+			
 		}
 
 		// 3. Return the name (or a fallback)

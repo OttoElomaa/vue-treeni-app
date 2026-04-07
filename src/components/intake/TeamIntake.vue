@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { supabase } from '../../lib/supabase-client';
-import type { Player, Team } from '../../types';
+import { onMounted, ref } from 'vue';
+import type { Player } from '../../types';
 import { Button, Card } from 'primevue';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { usePlayerStore } from '../../stores/playerStore';
 import { useTeamStore } from '../../stores/teamStore';
 
@@ -12,21 +11,21 @@ const props = defineProps<{
     teamId: string
 }>()
 
-const route = useRoute()
+
 const router = useRouter()
 
 const playerStore = usePlayerStore()
 const teamStore = useTeamStore()
 
+// COMPUTED REF that FILTERS PLAYERS in STORE based on team ID
+const players = playerStore.getPlayersByTeam(Number(props.teamId));
 const teamName = ref("")
 
 
 onMounted(async () => {
-    // SUPABASE FETCH TEAM'S PLAYERS
-    playerStore.fetchPlayersByTeamId(Number(props.teamId));
-    // SUPABASE FETCH TEAM INFO
-    teamStore.fetchTeamById(Number(props.teamId))
+   // SUPABASE FETCH TEAM'S PLAYERS + FETCH TEAM INFO
     teamName.value = await teamStore.getTeamName(Number(props.teamId))
+    playerStore.fetchPlayersByTeamId(Number(props.teamId));
 });
 
 const goToAddPlayer = () => {
@@ -44,11 +43,8 @@ const goToPlayer = (playerId: number) => {
 </script>
 
 <template>
-    <div v-if="playerStore.isLoading">
+    <div v-if="players.length == 0">
         <p class="text-2xl">Loading...</p>
-    </div>
-    <div v-if="playerStore.errorText != ''">
-        <p>{{ playerStore.errorText }}</p>
     </div>
     <div v-else class="grid gap-4 grid-cols-1">
 

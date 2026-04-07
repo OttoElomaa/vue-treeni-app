@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-
-import type { Player, Team } from '../../types';
-import { Column, DataTable } from 'primevue';
+import { Card, Column, DataTable } from 'primevue';
 import { usePlayerStore } from '../../stores/playerStore';
 import { useTeamStore } from '../../stores/teamStore';
 
@@ -15,46 +13,42 @@ const props = defineProps<{
     teamId: string
 }>()
 
-const loading = ref(true)
 
-const players = ref([] as Player[]);
-const errorText = ref("")
-const team = ref()
+// COMPUTED REF that FILTERS PLAYERS in STORE based on team ID
+const players = playerStore.getPlayersByTeam(Number(props.teamId));
 const teamName = ref("")
 
 onMounted(async () => {
-    // SUPABASE FETCH TEAM'S PLAYERS
-    const {players: fetchedPlayers, errorText: fetchedError} = await playerStore.fetchPlayersByTeamId(Number(props.teamId));
-    players.value = fetchedPlayers
-    errorText.value = fetchedError
-    // SUPABASE FETCH TEAM INFO
-    await teamStore.fetchTeamById(Number(props.teamId))
-    
-    loading.value = false
-
+    // SUPABASE FETCH TEAM'S PLAYERS + FETCH TEAM INFO
+    teamName.value = await teamStore.getTeamName(Number(props.teamId))
+    playerStore.fetchPlayersByTeamId(Number(props.teamId));
 });
 
 </script>
 
 <template>
-    <div v-if="loading">
+    <div v-if="players.length == 0">
         <p class="text-2xl">Loading...</p>
-    </div>
-    <div v-if="errorText != ''">
-        <p>Error: {{ errorText }}</p>
     </div>
     <div v-else class="grid gap-4 grid-cols-1">
 
         <p class="text-2xl">Team Analyze Screen</p>
         <h1 class="text-4xl">{{ teamName }}</h1>
 
-        <p>{{ errorText }}</p>
+        <div class="flex flex-row">
+            <Card>
+                <template #content>
 
-        <DataTable :value="players" tableStyle="min-width: 50rem">
-            <Column field="first_name" header="First Name"></Column>
-            <Column field="last_name" header="Last Name"></Column>
-            <Column field="birth_year" header="Birth year"></Column>
-        </DataTable>
+                    <DataTable :value="players" tableStyle="min-width: 50rem">
+                        <Column field="first_name" header="First Name"></Column>
+                        <Column field="last_name" header="Last Name"></Column>
+                        <Column field="birth_year" header="Birth year"></Column>
+                    </DataTable>
+                    
+
+                </template>
+            </Card>
+        </div>
     </div>
 
 
