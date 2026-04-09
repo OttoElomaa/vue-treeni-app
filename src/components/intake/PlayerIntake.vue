@@ -1,38 +1,30 @@
 <script setup lang="ts">
-import { onMounted, ref, Text } from 'vue';
-import type { Player, SportsTest } from '../../types';
-import {fetchTestsByPlayerId } from '../../databaseFunctions/fetch';
-import { Button, Card } from 'primevue';
+import { onMounted, ref, } from 'vue';
+import { Card } from 'primevue';
 import { usePlayerStore } from '../../stores/playerStore';
+import { useSportsTestStore } from '../../stores/sportsTestStore.ts'
 
 
 const playerStore = usePlayerStore()
+const sportsTestStore = useSportsTestStore()
 
 const props = defineProps<{
-        teamId: number,
-        playerId: number
+        teamId: string,
+        playerId: string
 }>()
 
+
+
+const sportsTests = sportsTestStore.getTestsByPlayer(Number(props.playerId));
+const playerName = ref("")
 const loading = ref(true)
 
-const player = ref();
-const playerName = ref("")
 
-const sportsTests = ref([] as SportsTest[])
-const errorText = ref("")
+
 
 onMounted(async () => {
-        // SUPABASE FETCH PLAYER'S TESTS
-        const { sportsTests: fetchedTests, errorText: fetchedError } = await fetchTestsByPlayerId(props.playerId);
-        sportsTests.value = fetchedTests
-        errorText.value = fetchedError
-
-        // SUPABASE FETCH PLAYER INFO
-        const { player: fetchedPlayer, errorText: fetchedError2 } = await playerStore.fetchPlayerById(props.playerId)
-        player.value = fetchedPlayer
-        if (fetchedPlayer) {
-                playerName.value = fetchedPlayer.first_name + " " + fetchedPlayer.last_name
-        }
+        playerName.value = await playerStore.getPlayerName(Number(props.playerId))
+        sportsTestStore.fetchTestsByPlayerId(Number(props.playerId));
         loading.value = false
 });
 
@@ -41,14 +33,10 @@ onMounted(async () => {
 
 
 <template>
-        <div v-if="loading">
+        <div v-if="sportsTests.length == 0">
                 <p class="text-2xl">Loading...</p>
         </div>
-        <div v-if="errorText != ''">
-                <p>{{ errorText }}</p>
-        </div>
-
-        <div v-else>
+        <div v-else class="grid gap-4 grid-cols-1">
 
                 <p class="text-2xl">Player Intake Screen</p>
                 <h1 class="text-4xl">{{ playerName }}</h1>

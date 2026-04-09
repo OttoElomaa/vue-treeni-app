@@ -23,9 +23,9 @@ const teamName = ref("")
 
 
 onMounted(async () => {
-   // SUPABASE FETCH TEAM'S PLAYERS + FETCH TEAM INFO
-    teamName.value = await teamStore.getTeamName(Number(props.teamId))
+    // SUPABASE FETCH TEAM'S PLAYERS + FETCH TEAM INFO
     playerStore.fetchPlayersByTeamId(Number(props.teamId));
+    teamName.value = await teamStore.getTeamName(Number(props.teamId))
 });
 
 const goToAddPlayer = () => {

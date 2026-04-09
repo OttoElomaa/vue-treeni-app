@@ -100,8 +100,13 @@ export const usePlayerStore = defineStore("players", () => {
       );
       errorText.value = "No data was returned. Are you logged in?";
     } else {
+      
       fetchedPlayers = data as Player[];
-      players.value = fetchedPlayers;
+      const existingIds = new Set(fetchedPlayers.map((p) => p.id));
+      const kept = fetchedPlayers.filter((p) => !existingIds.has(p.id));
+      const merged = [...fetchedPlayers, ...kept]
+      players.value = merged;
+
       console.log(data);
       errorText.value = "";
       loadedTeamIds.value.add(id);
@@ -143,6 +148,23 @@ export const usePlayerStore = defineStore("players", () => {
     }
     return { player: players[0], errorText: errorText };
   };
+
+  async function getPlayerName(id: number) {
+    // 1. Check the local team pool first
+    let foundPlayer = players.value.find((t) => t.id === id) as Player;
+    let playerName = "Player " + id;
+
+    // 2. If not found, go get it from the DB
+    if (!foundPlayer) {
+      const { player, errorText } = await fetchPlayerById(id);
+      foundPlayer = player as Player;
+      playerName = foundPlayer.first_name + " " + foundPlayer.last_name;
+      console.log("Player name loaded: " + playerName);
+    }
+
+    // 3. Return the name (or a fallback)
+    return playerName;
+  }
 
   const insertPlayer = async (playerData: CreatePlayer) => {
     let player = playerData;
@@ -196,6 +218,7 @@ export const usePlayerStore = defineStore("players", () => {
     fetchPlayersByTeamId,
     getPlayersByTeam,
     fetchPlayerById,
+    getPlayerName,
     insertPlayer,
     updatePlayer,
     initRealtime,

@@ -1,33 +1,30 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { usePlayerStore } from '../../stores/playerStore';
+import type { SportsTest } from '../../types';
+import { useSportsTestStore } from '../../stores/sportsTestStore';
+import { Card, Column, DataTable } from 'primevue';
 
 
 
 const playerStore = usePlayerStore()
+const sportsTestStore = useSportsTestStore()
 
 const props = defineProps<{
-        teamId: number,
-        playerId: number
+        teamId: string,
+        playerId: string
 }>()
 
+
+const sportsTests = sportsTestStore.getTestsByPlayer(Number(props.playerId));
+const player = ref();
+const playerName = ref("")
 const loading = ref(true)
 
-const player = ref();
-const errorText = ref("Loading...")
-const playerName = ref("")
 
 onMounted(async () => {
-        // SUPABASE FETCH PLAYER'S TESTS
-
-
-        // SUPABASE FETCH TEAM INFO
-        const { player: fetchedPlayer, errorText: fetchedError2 } = await playerStore.fetchPlayerById(props.playerId)
-        errorText.value = fetchedError2
-        player.value = fetchedPlayer
-        if (fetchedPlayer) {
-                playerName.value = fetchedPlayer.first_name + " " + fetchedPlayer.last_name
-        }
+        playerStore.fetchPlayerById(Number(props.playerId))
+        playerName.value = await playerStore.getPlayerName(Number(props.playerId))
         loading.value = false
 
 });
@@ -37,16 +34,27 @@ onMounted(async () => {
 
 
 <template>
-        <div v-if="loading">
+        <div v-if="sportsTests.length == 0">
                 <p class="text-2xl">Loading...</p>
         </div>
-        <div v-if="errorText != ''">
-                <p>{{ errorText }}</p>
-        </div>
-
-        <div v-else>
+        <div v-else class="grid gap-4 grid-cols-1">
 
                 <p class="text-2xl">Player Analyze Screen</p>
                 <h1 class="text-4xl">{{ playerName }}</h1>
+
+                <div class="flex flex-row">
+            <Card>
+                <template #content>
+
+                    <DataTable :value="sportsTests" tableStyle="min-width: 50rem">
+                        <Column field="seconds" header="Seconds"></Column>
+                        <Column field="taken_at" header="Taken at"></Column>
+                        <Column field="test_type" header="Test type"></Column>
+                    </DataTable>
+                    
+
+                </template>
+            </Card>
+        </div>
         </div>
 </template>
