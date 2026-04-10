@@ -48,8 +48,7 @@ export const SportsTestSchema = z.object({
   id: z.int(),
   seconds: z.float32().positive(),
   taken_at: z.iso.datetime(),
-  test_category: z.int(),
-  test_type: z.string(),
+  type_id: z.int(),
   player_id: z.int(),
 });
 

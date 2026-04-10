@@ -23,8 +23,8 @@ const loading = ref(true)
 
 
 onMounted(async () => {
-        playerName.value = await playerStore.getPlayerName(Number(props.playerId))
         sportsTestStore.fetchTestsByPlayerId(Number(props.playerId));
+        playerName.value = await playerStore.getPlayerName(Number(props.playerId))
         loading.value = false
 });
 
@@ -49,7 +49,7 @@ onMounted(async () => {
                                                 <div class="flex flex-row gap-6">
                                                         <div class="min-w-100">
                                                                 <p class="text-2xl">{{ test.seconds }} {{
-                                                                        test.test_type }}</p>
+                                                                        test.type_id }}</p>
                                                                 <p>Taken at: {{ test.taken_at }}</p>
                                                         </div>
                                                         <!-- <Button class="flex z-10" label="Muokkaa" @click.stop.prevent="goToEditPlayer(player)" /> -->
