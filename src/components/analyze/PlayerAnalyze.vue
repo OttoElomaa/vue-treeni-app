@@ -4,11 +4,13 @@ import { usePlayerStore } from '../../stores/playerStore';
 import type { SportsTest } from '../../types';
 import { useSportsTestStore } from '../../stores/sportsTestStore';
 import { Card, Column, DataTable } from 'primevue';
+import { useTestTypeStore } from '../../stores/testTypeStore';
 
 
 
 const playerStore = usePlayerStore()
 const sportsTestStore = useSportsTestStore()
+const testTypeStore = useTestTypeStore()
 
 const props = defineProps<{
         teamId: string,
@@ -23,6 +25,7 @@ const loading = ref(true)
 
 
 onMounted(async () => {
+        testTypeStore.fetchTestTypes()
         playerStore.fetchPlayerById(Number(props.playerId))
         playerName.value = await playerStore.getPlayerName(Number(props.playerId))
         loading.value = false
@@ -43,18 +46,22 @@ onMounted(async () => {
                 <h1 class="text-4xl">{{ playerName }}</h1>
 
                 <div class="flex flex-row">
-            <Card>
-                <template #content>
+                        <Card>
+                                <template #content>
 
-                    <DataTable :value="sportsTests" tableStyle="min-width: 50rem">
-                        <Column field="seconds" header="Seconds"></Column>
-                        <Column field="taken_at" header="Taken at"></Column>
-                        <Column field="test_type" header="Test type"></Column>
-                    </DataTable>
-                    
+                                        <DataTable :value="sportsTests" tableStyle="min-width: 50rem">
+                                                <Column field="seconds" header="Seconds"></Column>
+                                                <Column field="taken_at" header="Taken at"></Column>
+                                                <Column field="type_id" header="Test type"></Column>
+                                        </DataTable>
 
-                </template>
-            </Card>
-        </div>
+
+                                </template>
+                        </Card>
+                </div>
+
+                <div v-for="type in testTypeStore.testTypes"  :key="type.id">
+                        <p>{{ type.test_name }}</p>
+                </div>
         </div>
 </template>

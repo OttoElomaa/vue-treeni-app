@@ -4,11 +4,13 @@ import { useAuthStore } from '../../stores/authStore';
 import { useTeamStore } from '../../stores/teamStore';
 import { usePlayerStore } from '../../stores/playerStore';
 import { supabase } from '../../lib/supabase-client';
+import { useTestTypeStore } from '../../stores/testTypeStore';
 
 
 const auth = useAuthStore()
 const teamStore = useTeamStore()
 const playerStore = usePlayerStore()
+const testTypeStore = useTestTypeStore()
 
 
 
@@ -16,6 +18,7 @@ supabase.auth.onAuthStateChange((event, session) => {
 	// USER LOGGED IN
 	if (event === 'SIGNED_IN' && session) {
 		playerStore.initRealtime()
+		testTypeStore.fetchTestTypes()
 	}
 	// USER LOGGED OUT
 	if (event === 'SIGNED_OUT') {

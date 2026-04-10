@@ -63,4 +63,15 @@ export type CreateSportsTest = z.infer<typeof CreateSportsTestSchema>;
 
 // ######################################################
 // OTHER STUFF
+
+export type TestType = {
+  id:number,
+  test_name:string,
+  category:TestCategory
+}
+
+export type TestCategory = 1 | 2
+
+
+
 export type Mode = "intake" | "analyze";
