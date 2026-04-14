@@ -13,11 +13,11 @@ const playerStore = usePlayerStore()
 const teamStore = useTeamStore()
 
 
-onMounted( () => {
+/* onMounted( () => {
         authStore.signOut()
         playerStore.clearStore()
         teamStore.clearStore()
-} )
+} ) */
 
 
 </script>

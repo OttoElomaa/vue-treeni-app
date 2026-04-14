@@ -82,7 +82,7 @@ const items = computed<MenuItem[]>(() => {
       command: () => router.push(`/${mode}/team/${params.teamId}`),
     })
 
-    if (routeHasAdd.value) {
+    if (routeHasAdd.value && !params.playerId) {
       crumbs.push({
         label: `Uusi pelaaja`,
         command: () => router.push(`/${mode}/team/${params.teamId}/add`),
@@ -95,6 +95,13 @@ const items = computed<MenuItem[]>(() => {
       label: `${playerName.value}`,
       command: () => router.push(`/${mode}/team/${params.teamId}/player/${params.playerId}`),
     })
+
+    if (routeHasAdd.value) {
+      crumbs.push({
+        label: `Uusi testitulos`,
+        command: () => router.push(`/${mode}/team/${params.teamId}/player/${params.playerId}/add`),
+      })
+    }
   }
 
   return crumbs

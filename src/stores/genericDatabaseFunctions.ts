@@ -1,7 +1,7 @@
 import { supabase } from "../lib/supabase-client";
 
 
-type Table = 'players' | 'sports_tests' | 'teams' | 'test_type'
+type Table = 'players' | 'tests' | 'teams' | 'test_type'
 type Result<T> = { data: T; error: null } | { data: null; error: Error }
 
 async function fetchAll<T>(table: Table, column?: string, value?: string | number): Promise<Result<T[]>> {

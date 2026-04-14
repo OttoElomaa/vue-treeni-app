@@ -3,10 +3,13 @@ import { computed, ref } from "vue";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import type { SportsTest } from "../types";
 import { supabase } from "../lib/supabase-client";
+import { insertOne } from "./genericDatabaseFunctions";
 
 export const useSportsTestStore = defineStore("sportsTests", () => {
   const sportsTests = ref([] as SportsTest[]);
   let sportsTestChannel: RealtimeChannel | null = null;
+
+  const error = ref(null as unknown as Error);
 
   const loadedPlayerIds = ref(new Set()); // Track which teams we've already fetched
 
@@ -125,5 +128,19 @@ export const useSportsTestStore = defineStore("sportsTests", () => {
     });
   }
 
-  return { sportsTests, initRealtime, fetchTestsByPlayerId, getTestsByPlayer };
+  async function addSportsTest(test: Partial<SportsTest>) {
+    const result = await insertOne<SportsTest>("tests", test);
+    if (result.error) {
+      error.value = result.error;
+      return;
+    }
+    sportsTests.value.push(result.data);
+  }
+
+
+function clearStore() {
+		sportsTests.value = [];
+	}
+
+  return { sportsTests, initRealtime, fetchTestsByPlayerId, getTestsByPlayer, addSportsTest, clearStore };
 });

@@ -6,6 +6,7 @@ import { useSportsTestStore } from '../../stores/sportsTestStore';
 import { Card, Column, DataTable, SelectButton } from 'primevue';
 import { useTestTypeStore } from '../../stores/testTypeStore';
 import TestMultiBoardPlayer from './TestMultiBoardPlayer.vue';
+import CategorySelectButton from '../misc/CategorySelectButton.vue';
 
 
 
@@ -19,15 +20,10 @@ const props = defineProps<{
 }>()
 
 
-const activeCategory = ref(1 as TestCategory)
 
-const categoryOptions = [
-        { label: 'Kuntotestit', value: 1 },
-        { label: 'Tekniikkatestit', value: 2 },
-]
 
 const filteredTestTypes = computed(() =>
-  testTypeStore.testTypes.filter((type) => type.category === activeCategory.value)
+  testTypeStore.testTypes.filter((type) => type.category === testTypeStore.activeCategory)
 )
 
 const sportsTests = sportsTestStore.getTestsByPlayer(Number(props.playerId));
@@ -59,13 +55,13 @@ onMounted(async () => {
         </div>
         <div v-else class="grid gap-4 grid-cols-1">
 
-                <div class="flex flew-row">
+                <div class="flex flew-row gap-24">
                         <div>
                                 <p class="text-2xl">Player Analyze Screen</p>
                                 <h1 class="text-4xl">{{ playerName }}</h1>
                         </div>
-                        <SelectButton v-model="activeCategory" :options="categoryOptions" optionLabel="label"
-                                optionValue="value" :allowEmpty="false" />
+                        <CategorySelectButton/>
+                        
                 </div>
 
 

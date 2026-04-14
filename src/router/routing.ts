@@ -5,3 +5,10 @@ export const goToTeamView = (teamId: number) => {
     router.push(`/intake/team/${teamId}`);
   }
 };
+
+
+export const goToAddTest = (teamId: string, playerId: string) => {
+  if (teamId && playerId) {
+    router.push(`/intake/team/${teamId}/player/${playerId}/add`);
+  }
+};

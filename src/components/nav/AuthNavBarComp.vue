@@ -19,6 +19,9 @@ supabase.auth.onAuthStateChange((event, session) => {
 	if (event === 'SIGNED_IN' && session) {
 		playerStore.initRealtime()
 		testTypeStore.fetchTestTypes()
+		if (!auth.user) {
+			auth.user = session.user
+		}
 	}
 	// USER LOGGED OUT
 	if (event === 'SIGNED_OUT') {
