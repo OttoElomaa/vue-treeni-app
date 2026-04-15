@@ -42,9 +42,9 @@ onMounted(async () => {
                 <p class="text-2xl">Player Intake Screen</p>
                 <h1 class="text-4xl">{{ playerName }}</h1>
 
-<div class="flex-row">
-            <Button label="Uusi testitulos" @click="goToAddTest(teamId, playerId)" class="flex-none" />
-        </div>
+                <div class="flex-row">
+                        <Button label="Uusi testitulos" @click="goToAddTest(teamId, playerId)" class="flex-none" />
+                </div>
 
                 <div class="grid gap-4 grid-cols-1">
                         <template v-for="test in sportsTests" :key="test.id">

@@ -5,6 +5,7 @@ import { Button, Card } from 'primevue';
 import { useRouter } from 'vue-router';
 import { usePlayerStore } from '../../stores/playerStore';
 import { useTeamStore } from '../../stores/teamStore';
+import { goToAddTest } from '../../router/routing';
 
 
 const props = defineProps<{
@@ -67,7 +68,8 @@ const goToPlayer = (playerId: number) => {
                                 <p>Born {{ player.birth_year }}</p>
                             </div>
 
-                            <Button class="flex z-10" label="Muokkaa" @click.stop.prevent="goToEditPlayer(player)" />
+                            <Button severity="secondary" class="flex z-10" label="Muokkaa" @click.stop.prevent="goToEditPlayer(player)" />
+                            <Button label="Uusi testitulos" @click.stop.prevent="goToAddTest(teamId, String(player.id))" />
                         </div>
                     </template>
                 </Card>

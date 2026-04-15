@@ -5,7 +5,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { CreateSportsTestSchema, type CreateSportsTest } from '../../types';
 import { Form, FormField, type FormSubmitEvent } from '@primevue/forms';
 import { goToTeamView } from '../../router/routing';
-import { Button, Card, InputNumber } from 'primevue';
+import { Button, Card, DatePicker, InputNumber } from 'primevue';
 import MyIntakeErrorMessage from './MyIntakeErrorMessage.vue';
 import { usePlayerStore } from '../../stores/playerStore';
 
@@ -21,6 +21,8 @@ const props = defineProps<{
 
 
 const playerName = ref("")
+const today = new Date();
+
 const loading = ref(true)
 
 onMounted(async () => {
@@ -31,7 +33,8 @@ onMounted(async () => {
 const resolver = zodResolver(CreateSportsTestSchema);
 
 const initialValues = reactive({
-    player_id: parseInt(props.playerId)
+    player_id: parseInt(props.playerId),
+    taken_at: new Date()
 });
 
 const isInvalidSubmit = ref(false)
@@ -42,7 +45,9 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
     console.log("Valid: ", submitEvent.valid)
     console.log("Errors: ", submitEvent.errors)
     if (submitEvent.valid) {
-        sportsTestStore.addSportsTest(submitEvent.values as CreateSportsTest)
+        let newTest = submitEvent.values as CreateSportsTest
+        newTest.taken_at = new Date()
+        sportsTestStore.addSportsTest(newTest)
         submitEvent.reset()
         isInvalidSubmit.value = false
         submitSucceeded.value = true
@@ -81,6 +86,15 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
                         <InputNumber name="type_id" type="number" placeholder="Testityyppi" fluid />
                         <MyIntakeErrorMessage :inputValue="$form.type_id" />
                     </div>
+
+
+                    <div class="flex flex-col gap-1">
+                        <FormField v-slot="{ value, props }" name="taken_at">
+                            <DatePicker v-bind="props" :modelValue="value" :maxDate="today" dateFormat="dd/mm/yy" />
+                        </FormField>
+                        <MyIntakeErrorMessage :inputValue="$form.taken_at" />
+                    </div>
+
                 </div>
 
                 <p v-if="isInvalidSubmit">Annetuissa tiedoissa on jokin ongelma, yritä uudestaan!</p>
