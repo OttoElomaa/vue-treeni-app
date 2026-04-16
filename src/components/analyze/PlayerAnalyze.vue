@@ -20,12 +20,6 @@ const props = defineProps<{
 }>()
 
 
-
-
-const filteredTestTypes = computed(() =>
-  testTypeStore.testTypes.filter((type) => type.category === testTypeStore.activeCategory)
-)
-
 const sportsTests = sportsTestStore.getTestsByPlayer(Number(props.playerId));
 
 function testsByType(typeId: number) {
@@ -65,7 +59,7 @@ onMounted(async () => {
                 </div>
 
 
-                <div v-for="type in filteredTestTypes" :key="type.id">
+                <div v-for="type in testTypeStore.filteredTestTypes" :key="type.id">
                         <TestMultiBoardPlayer :type="type" :sportsTests="testsByType(type.id)"/>
                 </div>
         </div>

@@ -50,9 +50,9 @@ export type CreatePlayer = z.infer<typeof CreatePlayerSchema>;
 // SPORTS TESTS
 export const SportsTestSchema = z.object({
   id: z.int(),
-  seconds: z.float32().positive(),
-  taken_at: z.coerce.date().max(new Date(), 'Päivämäärä tulevaisuudessa').optional(),
-  type_id: z.int(),
+  seconds: z.float32("Anna sekunnit").positive(),
+  taken_at: z.coerce.date("Anna päivämäärä").max(new Date(), 'Päivämäärä tulevaisuudessa'),
+  type_id: z.int("Valitse testityyppi"),
   player_id: z.int(),
 });
 

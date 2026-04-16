@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { Player, TestCategory, TestType } from "../types";
 import { fetchAll } from "./genericDatabaseFunctions";
 
@@ -15,6 +15,10 @@ export const useTestTypeStore = defineStore("test_types", () => {
     { label: "Tekniikkatestit", value: 2 },
   ];
 
+  const filteredTestTypes = computed(() =>
+  testTypes.value.filter((type) => type.category === activeCategory.value)
+)
+
   async function fetchTestTypes() {
     const result = await fetchAll<TestType>("test_type");
     if (result.error) {
@@ -26,5 +30,5 @@ export const useTestTypeStore = defineStore("test_types", () => {
     console.log(testTypes.value);
   }
 
-  return { testTypes, error, activeCategory, categoryOptions, fetchTestTypes };
+  return { testTypes, error, activeCategory, categoryOptions, filteredTestTypes, fetchTestTypes };
 });

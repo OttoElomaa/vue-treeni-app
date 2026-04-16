@@ -5,14 +5,17 @@ import { onMounted, reactive, ref } from 'vue';
 import { CreateSportsTestSchema, type CreateSportsTest } from '../../types';
 import { Form, FormField, type FormSubmitEvent } from '@primevue/forms';
 import { goToTeamView } from '../../router/routing';
-import { Button, Card, DatePicker, InputNumber } from 'primevue';
+import { Button, Card, DatePicker, InputNumber, Select } from 'primevue';
 import MyIntakeErrorMessage from './MyIntakeErrorMessage.vue';
 import { usePlayerStore } from '../../stores/playerStore';
+import CategorySelectButton from '../misc/CategorySelectButton.vue';
+import { useTestTypeStore } from '../../stores/testTypeStore';
 
 
-
-const sportsTestStore = useSportsTestStore()
 const playerStore = usePlayerStore()
+const sportsTestStore = useSportsTestStore()
+const testTypeStore = useTestTypeStore()
+
 
 const props = defineProps<{
     teamId: string,
@@ -33,7 +36,7 @@ onMounted(async () => {
 const resolver = zodResolver(CreateSportsTestSchema);
 
 const initialValues = reactive({
-    player_id: parseInt(props.playerId),
+    player_id: Number(props.playerId),
     taken_at: new Date()
 });
 
@@ -46,7 +49,7 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
     console.log("Errors: ", submitEvent.errors)
     if (submitEvent.valid) {
         let newTest = submitEvent.values as CreateSportsTest
-        newTest.taken_at = new Date()
+        // newTest.taken_at = new Date()
         sportsTestStore.addSportsTest(newTest)
         submitEvent.reset()
         isInvalidSubmit.value = false
@@ -66,29 +69,44 @@ const onFormSubmit = (submitEvent: FormSubmitEvent) => {
     </div>
     <Card v-else>
         <template #content class="grid gap-4 grid-cols-1">
-            <p class="text-2xl">Uusi testitulos</p>
-            <p class="text-4xl">{{ playerName }}</p>
+            <div class="flex flew-row gap-24">
+
+                <div>
+                    <p class="text-2xl">Uusi testitulos</p>
+                    <p class="text-4xl">{{ playerName }}</p>
+                </div>
+                <CategorySelectButton />
+            </div>
+
 
             <Form v-slot="$form" :initialValues :resolver="resolver" @submit="onFormSubmit"
                 :validateOnValueUpdate="true" class="flex flex-col gap-4">
 
-                <FormField name="team_id" v-slot="$field">
+                <FormField name="player_id" v-slot="$field">
                     <input type="hidden" v-model="$field.value" />
                 </FormField>
 
-                <!-- Seconds and Test type -->
+
+                <!-- TEST TYPE SELECTION BASED ON CURRENTLY SELECTED TEST TYPE CATEGORY -->
+                <div class="flex flex-col gap-1">
+                    <FormField v-slot="{ value, props }" name="type_id">
+                        <Select v-bind="props" :modelValue="value" :options="testTypeStore.filteredTestTypes"
+                            optionLabel="test_name" optionValue="id" placeholder="Select test type" />
+                    </FormField>
+                    <MyIntakeErrorMessage :inputValue="$form.type_id" />
+                </div>
+
+
                 <div class="flex flex-row gap-4">
+                    <!-- SECONDS -->
                     <div class="flex flex-col gap-1">
+                        <p>Sekunnit</p>
                         <InputNumber name="seconds" type="number" placeholder="Sekunnit" fluid />
                         <MyIntakeErrorMessage :inputValue="$form.seconds" />
                     </div>
+                    <!-- DATE -->
                     <div class="flex flex-col gap-1">
-                        <InputNumber name="type_id" type="number" placeholder="Testityyppi" fluid />
-                        <MyIntakeErrorMessage :inputValue="$form.type_id" />
-                    </div>
-
-
-                    <div class="flex flex-col gap-1">
+                        <p>Päivämäärä</p>
                         <FormField v-slot="{ value, props }" name="taken_at">
                             <DatePicker v-bind="props" :modelValue="value" :maxDate="today" dateFormat="dd/mm/yy" />
                         </FormField>
