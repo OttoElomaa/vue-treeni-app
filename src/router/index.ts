@@ -32,7 +32,7 @@ function isValidMode(value: string): boolean {
 const routes: RouteRecordRaw[] = [
   { path: "/", redirect: DEFAULT_PATH },
 
-  // ── Analysis ─────────────────────────────────────────────────
+  // ── Analyze ─────────────────────────────────────────────────
   {
     path: "/analyze",
     name: "org-analyze",
@@ -121,6 +121,7 @@ supabase.auth.onAuthStateChange((event, session) => {
 });
 
 router.beforeEach(async (to) => {
+  // Just a Printout
   console.log("Navigating to:", {
     path: to.path,
     name: to.name,
@@ -134,7 +135,6 @@ router.beforeEach(async (to) => {
     currentSession = data.session;
     sessionReady = true;
   }
-
   console.log("Session:", currentSession);
   console.log("Requires auth:", to.meta.requiresAuth);
 

@@ -5,7 +5,7 @@ import { Button, Card } from 'primevue';
 import { useRouter } from 'vue-router';
 import { usePlayerStore } from '../../stores/playerStore';
 import { useTeamStore } from '../../stores/teamStore';
-import { goToAddTest } from '../../router/routing';
+import { goToAddPlayer, goToAddTest, goToEditPlayer, goToPlayer } from '../../router/routing';
 
 
 const props = defineProps<{
@@ -29,18 +29,6 @@ onMounted(async () => {
     teamName.value = await teamStore.getTeamName(Number(props.teamId))
 });
 
-const goToAddPlayer = () => {
-    router.push(`/intake/team/${props.teamId}/add`)
-}
-
-const goToEditPlayer = (player: Player) => {
-    router.push(`/intake/team/${props.teamId}/player/${player.id}/edit`)
-}
-
-const goToPlayer = (playerId: number) => {
-    router.push(`/intake/team/${props.teamId}/player/${playerId}`)
-}
-
 </script>
 
 <template>
@@ -53,13 +41,13 @@ const goToPlayer = (playerId: number) => {
         <h1 class="text-4xl">{{ teamName }}</h1>
 
         <div class="flex-row">
-            <Button label="Uusi pelaaja" @click="goToAddPlayer" class="flex-none" />
+            <Button label="Uusi pelaaja" @click="goToAddPlayer(props.teamId)" class="flex-none" />
         </div>
 
         <div class="grid gap-4 grid-cols-1">
             <template v-for="player in playerStore.players" :key="player.id">
 
-                <Card @click="goToPlayer(player.id)"
+                <Card @click="goToPlayer(player.id, Number(props.teamId))"
                     class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">
                     <template #content>
                         <div class="flex flex-row gap-6">

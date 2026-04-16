@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import type { Team } from '../../types';
-import { Card } from 'primevue';
+import { Button, Card } from 'primevue';
 import { RouterLink } from 'vue-router';
 import { useTeamStore } from '../../stores/teamStore';
+import { goToAddPlayer } from '../../router/routing';
 
 
 const teamStore = useTeamStore()
@@ -20,11 +21,16 @@ onMounted(async () => {
         <p>{{ teamStore.errorText }}</p>
 
         <div class="grid gap-4 grid-cols-1">
-            <RouterLink v-for="team in teamStore.teams" :key="team.id" :to="`/intake/team/${team.id}`" class="card-link">
+            <RouterLink v-for="team in teamStore.teams" :key="team.id" :to="`/intake/team/${team.id}`"
+                class="card-link">
 
                 <Card>
-                    <template #title>{{ team.team_name }}</template>
-                    <template #content>Info...</template>
+                    <template #content>
+                        <div class="flex flex-row gap-6">
+                            <p class="text-2xl  min-w-100">{{ team.team_name }}</p>
+                            <Button label="Uusi pelaaja" @click="goToAddPlayer(String(team.id))" />
+                        </div>
+                    </template>
                 </Card>
             </RouterLink>
         </div>

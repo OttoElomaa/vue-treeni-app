@@ -12,9 +12,9 @@ const route = useRoute();
 const router = useRouter();
 
 const currentMode = computed(() => {
-    const name = route.name?.toString() || ''
-    if (name.includes('intake')) return 'intake'
-    return 'analyze'
+  const path = route.path
+  if (path.startsWith('/intake')) return 'intake'
+  return 'analyze'
 })
 
 function goTo(mode: Mode) {

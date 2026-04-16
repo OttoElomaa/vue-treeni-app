@@ -24,7 +24,6 @@ const sportsTestStore = useSportsTestStore()
                                         <DataTable :value="sportsTests" tableStyle="min-width: 50rem">
                                                 <Column field="seconds" header="Seconds"></Column>
                                                 <Column field="taken_at" header="Taken at"></Column>
-                                                <Column field="type_id" header="Test type"></Column>
                                         </DataTable>
 
 
