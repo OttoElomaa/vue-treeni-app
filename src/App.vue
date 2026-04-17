@@ -6,18 +6,21 @@ import { onMounted } from 'vue';
 import { usePlayerStore } from './stores/playerStore';
 import { useTeamStore } from './stores/teamStore';
 import { useAuthStore } from './stores/authStore';
+import { useTestTypeStore } from './stores/testTypeStore';
 
 
 const authStore = useAuthStore()
 const playerStore = usePlayerStore()
 const teamStore = useTeamStore()
+const testTypeStore = useTestTypeStore()
 
 
-/* onMounted( () => {
-        authStore.signOut()
+onMounted( () => {
+        testTypeStore.fetchTestTypes()
+        /* authStore.signOut()
         playerStore.clearStore()
-        teamStore.clearStore()
-} ) */
+        teamStore.clearStore() */
+} ) 
 
 
 </script>

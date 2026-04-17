@@ -17,6 +17,7 @@ import EditPlayer from "../components/intake/EditPlayer.vue";
 import AddTest from "../components/intake/AddTest.vue";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase-client";
+import BatchIntake from "../components/intake/BatchIntake.vue";
 
 // ─── Types ───────────────────────────────────────────────────────
 
@@ -67,6 +68,12 @@ const routes: RouteRecordRaw[] = [
     path: "/intake/team/:teamId/add",
     name: "team-intake-add-player",
     component: AddPlayer,
+    props: true,
+  },
+  {
+    path: "/intake/team/:teamId/batch",
+    name: "team-batch-intake",
+    component: BatchIntake,
     props: true,
   },
   {

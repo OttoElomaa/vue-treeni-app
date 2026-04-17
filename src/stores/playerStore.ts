@@ -169,7 +169,8 @@ export const usePlayerStore = defineStore("players", () => {
 		let player = playerData;
 		let errorText = "Loading...";
 
-		const { error } = await supabase.from("players").insert(player).single();
+		const { data, error } = await supabase.from("players").insert(player).single();
+		const createdPlayer = data as unknown as Player
 
 		if (error) {
 			console.error("Error in supabase player insert: ", error.message);
@@ -178,7 +179,7 @@ export const usePlayerStore = defineStore("players", () => {
 			console.log("Inserted: ", player);
 			errorText = "";
 		}
-		return { player: player, errorText: errorText };
+		return { player: createdPlayer, errorText: errorText };
 	};
 
 	const updatePlayer = async (playerData: Player) => {

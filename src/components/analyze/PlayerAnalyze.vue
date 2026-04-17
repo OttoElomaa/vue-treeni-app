@@ -32,7 +32,6 @@ const loading = ref(true)
 
 
 onMounted(async () => {
-        testTypeStore.fetchTestTypes()
         playerStore.fetchPlayerById(Number(props.playerId))
         playerName.value = await playerStore.getPlayerName(Number(props.playerId))
         loading.value = false
