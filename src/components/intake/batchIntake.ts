@@ -59,7 +59,7 @@ export function useBatchIntake(teamId: () => number) {
   const { addSportsTests } = useSportsTestStore();
   const testTypeStore = useTestTypeStore();
 
-  const playerStore = usePlayerStore()
+  const playerStore = usePlayerStore();
 
   // State
   const testYear = ref(CURRENT_YEAR);
@@ -78,7 +78,6 @@ export function useBatchIntake(teamId: () => number) {
   // PARSED ROW HELPER
 
   function parseRow(
-    playerList: Player[],
     line: string,
     lineNum: number,
     types: TestType[],
@@ -92,7 +91,6 @@ export function useBatchIntake(teamId: () => number) {
     const fields = raw.split(sep).map((s) => s.trim());
     const emptyScores = () => Array<null>(types.length).fill(null);
 
-    
     if (fields.length < 2 || !fields[0] || !fields[1]) {
       return {
         line: lineNum,
@@ -111,8 +109,12 @@ export function useBatchIntake(teamId: () => number) {
       return val ? parseNumber(val, europeanDecimal) : null;
     });
 
-    console.log("type check:", typeof playerList, typeof playerList[0]?.first_name);
-    const existing = playerList.find(
+    console.log(
+      "type check:",
+      typeof playerStore.players,
+      typeof playerStore.players[0]?.first_name,
+    );
+    const existing = playerStore.players.find(
       (p: Player) =>
         p.first_name.toLowerCase() === firstName!.toLowerCase() &&
         p.last_name.toLowerCase() === lastName!.toLowerCase(),
@@ -170,7 +172,7 @@ export function useBatchIntake(teamId: () => number) {
     const seenNew = new Set<string>();
 
     const rows = text.split("\n").reduce<ParsedRow[]>((rows, line, i) => {
-      const row = parseRow(playerStore.players, line, i + 1, types, sep, europeanDecimal, seenNew);
+      const row = parseRow(line, i + 1, types, sep, europeanDecimal, seenNew);
       if (row) rows.push(row);
       return rows;
     }, []);
@@ -192,8 +194,11 @@ export function useBatchIntake(teamId: () => number) {
   );
 
   const totalTests = computed(() =>
-    validRows.value.reduce((sum, row) => sum + row.scores.filter(s => s != null).length, 0),
-  )
+    validRows.value.reduce(
+      (sum, row) => sum + row.scores.filter((s) => s != null).length,
+      0,
+    ),
+  );
 
   // #############################################################
   // #### Actions
@@ -210,7 +215,9 @@ export function useBatchIntake(teamId: () => number) {
 
       // CREATE PLAYER OR RETRIEVE EXISTING PLAYER
       for (const row of validRows.value) {
+        console.log("processing row: ", row);
         const result = await resolvePlayer(row, batchCreated);
+        console.log("resolved:", result);
 
         // CREATE TESTS BASED ON THE CSV ROW DATA
         if (result?.player) {
@@ -231,15 +238,15 @@ export function useBatchIntake(teamId: () => number) {
     row: ParsedRow,
     batchCreated: Map<string, Player>,
   ): Promise<{ player: Player | null; wasCreated: boolean } | null> {
-    let newPlayer = null as unknown as Player;
-
-    if (row.status === "existing" && row.playerId)
-      return { player: null, wasCreated: false };
+    // HANDLE EXISTING ROWS - CREATE AN EMPTY PLAYER TO STORE THE PLAYER ID REFERENCE TO THE EXISTING RECORD
+    if (row.playerId) {
+      return { player: { id: row.playerId } as Player, wasCreated: false };
+    }
 
     const key = `${row.firstName.toLowerCase()}|${row.lastName.toLowerCase()}`;
     const existing = batchCreated.get(key);
     if (existing !== undefined) return { player: existing, wasCreated: true };
-
+    // CREATE NEW PLAYER
     const player = {
       first_name: row.firstName,
       last_name: row.lastName,
@@ -247,17 +254,17 @@ export function useBatchIntake(teamId: () => number) {
       team_id: teamId(),
     } as CreatePlayer;
 
+    // INSERT IT TO DB
     const { player: createdPlayer, errorText: newError } =
       await playerStore.insertPlayer(player);
     console.log("Row player create:", createdPlayer);
-    
+    // REPORT THE RESULTS TO CALLER
     if (createdPlayer) {
-      newPlayer = createdPlayer;
       batchCreated.set(key, createdPlayer);
       return { player: createdPlayer, wasCreated: true };
     } else {
       console.error("Failed to create player:", newError);
-      return null;
+      return { player: null, wasCreated: false };
     }
   }
 
