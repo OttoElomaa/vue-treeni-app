@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tailwindcss-primeui"; /* Bridges PrimeVue design tokens to Tailwind */
 
+@import 'primeicons/primeicons.css';
+
+
 /* Align Tailwind's 'dark:' variant with PrimeVue's selector */
 @custom-variant dark (&:where(.my-app-dark, .my-app-dark *));
 

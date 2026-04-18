@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import type { SportsTest } from "../types";
+import type { CreateSportsTest, SportsTest } from "../types";
 import { supabase } from "../lib/supabase-client";
-import { insertOne } from "./genericDatabaseFunctions";
+import { insertMultiple, insertOne } from "./genericDatabaseFunctions";
 
 export const useSportsTestStore = defineStore("sportsTests", () => {
   const sportsTests = ref([] as SportsTest[]);
@@ -128,7 +128,7 @@ export const useSportsTestStore = defineStore("sportsTests", () => {
     });
   }
 
-  async function addSportsTest(test: Partial<SportsTest>) {
+  async function addSportsTest(test: CreateSportsTest) {
     const result = await insertOne<SportsTest>("tests", test);
     if (result.error) {
       error.value = result.error;
@@ -137,10 +137,28 @@ export const useSportsTestStore = defineStore("sportsTests", () => {
     sportsTests.value.push(result.data);
   }
 
+  async function addSportsTests(tests: CreateSportsTest[]) {
+    const result = await insertMultiple<SportsTest>("tests", tests);
+    if (result.error) {
+      error.value = result.error;
+      console.log(error);
+      
+      return;
+    }
+    sportsTests.value.push(...result.data);
+  }
 
-function clearStore() {
-		sportsTests.value = [];
-	}
+  function clearStore() {
+    sportsTests.value = [];
+  }
 
-  return { sportsTests, initRealtime, fetchTestsByPlayerId, getTestsByPlayer, addSportsTest, clearStore };
+  return {
+    sportsTests,
+    initRealtime,
+    fetchTestsByPlayerId,
+    getTestsByPlayer,
+    addSportsTest,
+    addSportsTests,
+    clearStore,
+  };
 });

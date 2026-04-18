@@ -34,6 +34,15 @@ async function insertOne<T>(table: Table, row: Partial<T>): Promise<Result<T>> {
   return { data: data as T, error: null }
 }
 
+async function insertMultiple<T>(table: Table, rows: Partial<T>[]): Promise<Result<T[]>> {
+  const { data, error } = await supabase
+    .from(table)
+    .insert(rows)
+    .select()
+  if (error) return { data: null, error }
+  return { data: data as T[], error: null }
+}
+
 async function updateOne<T>(table: Table, id: number, updates: Partial<T>): Promise<Result<T>> {
   const { data, error } = await supabase
     .from(table)
@@ -54,5 +63,5 @@ async function deleteOne(table: Table, id: number): Promise<Result<{ id: number 
   return { data: { id }, error: null }
 }
 
-export { fetchAll, fetchOne, insertOne, updateOne, deleteOne }
+export { fetchAll, fetchOne, insertOne, insertMultiple, updateOne, deleteOne }
 export type { Result }

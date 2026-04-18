@@ -10,22 +10,29 @@ import Column from 'primevue/column'
 import Tag from 'primevue/tag'
 import { useBatchIntake, type ParsedRow } from './batchIntake.ts'
 import CategorySelectButton from '../misc/CategorySelectButton.vue'
+import { onMounted, watch } from 'vue'
+import { usePlayerStore } from '../../stores/playerStore.ts'
 
 const props = defineProps<{ teamId: number }>()
+const playerStore = usePlayerStore()
 
 const {
   testYear, testMonth, rawCsv, importing, importDone, importResult,
-  activeCategory, categoryOptions,
-  testTypes, hasContent, parsedRows, validRows, errorRows, canImport,
+  testTypes, hasContent, parsedRows, validRows, errorRows, canImport, totalTests,
   MONTH_OPTIONS, CURRENT_YEAR,
   doImport, reset,
 } = useBatchIntake(() => props.teamId)
 
-const STATUS_TAG: Record<ParsedRow['status'], { severity: 'info' | 'success' | 'danger'; icon: string }> = {
-  existing: { severity: 'info', icon: 'pi pi-user' },
-  new: { severity: 'success', icon: 'pi pi-plus' },
-  error: { severity: 'danger', icon: 'pi pi-times' },
-}
+
+onMounted(() => {
+  playerStore.fetchPlayersByTeamId(props.teamId)
+})
+
+watch(
+  () => playerStore.players.length,
+  (len) => console.log('players store changed, length:', len),
+)
+
 </script>
 
 <template>
@@ -51,7 +58,7 @@ const STATUS_TAG: Record<ParsedRow['status'], { severity: 'info' | 'success' | '
       <!-- Date -->
       <div class="flex flex-row mb-6">
         <div>
-          <label class="block text-sm font-semibold mb-1">Test date</label>
+          <label class="block text-sm font-semibold mb-1">Testin päivämäärä</label>
           <div class="flex flex-row gap-2">
             <Select v-model="testMonth" :options="MONTH_OPTIONS" option-label="label" option-value="value"
               class="w-40" />
@@ -60,7 +67,7 @@ const STATUS_TAG: Record<ParsedRow['status'], { severity: 'info' | 'success' | '
         </div>
 
         <!-- Test Type Category -->
-        <CategorySelectButton class="ml-48"/>
+        <CategorySelectButton class="ml-48" />
       </div>
 
 
@@ -79,16 +86,17 @@ const STATUS_TAG: Record<ParsedRow['status'], { severity: 'info' | 'success' | '
       </p>
 
       <Textarea v-model="rawCsv" class="w-full font-mono mb-4" style="resize: vertical"
-        :placeholder="`Alice, Smith, 05, 12.5, 8.1\nBob, Jones, 1998, 11.2, , 13.8`" :rows="4" />
+        :placeholder="`Alice, Smith, 05, 12.5, 8.1\nBob, Jones, 1998, 11.2, , 13.8`" :rows="8" />
 
       <!-- Preview -->
       <template v-if="hasContent && parsedRows.length">
-        <div class="flex items-center justify-between gap-4 mb-2 flex-wrap">
+        <div class="flex flex-col gap-4 mb-6">
           <span class="text-sm font-semibold">
-            Preview — {{ validRows.length }} valid
-            <template v-if="errorRows.length">
-              , {{ errorRows.length }} error{{ errorRows.length !== 1 ? 's' : '' }}
-            </template>
+            Preview — {{ validRows.length }} valid row{{ validRows.length !== 1 ? 's' : '' }}
+          ({{ totalTests }} test{{ totalTests !== 1 ? 's' : '' }})
+          <template v-if="errorRows.length">
+            , {{ errorRows.length }} error{{ errorRows.length !== 1 ? 's' : '' }}
+          </template>
           </span>
           <div class="flex gap-2 shrink-0">
             <Button label="Import" size="small" :disabled="!canImport" :loading="importing" @click="doImport" />
@@ -96,35 +104,48 @@ const STATUS_TAG: Record<ParsedRow['status'], { severity: 'info' | 'success' | '
           </div>
         </div>
 
-        <DataTable :value="parsedRows" scrollable scroll-height="260px" size="small">
-          <Column header="" style="width: 3rem">
-            <template #body="{ data }: { data: ParsedRow }">
-              <Tag :severity="STATUS_TAG[data.status].severity" :icon="STATUS_TAG[data.status].icon"
-                class="w-6 h-6 p-0 justify-center" />
-            </template>
-          </Column>
-          <Column header="Player">
-            <template #body="{ data }: { data: ParsedRow }">
-              {{ data.firstName }} {{ data.lastName }}
-            </template>
-          </Column>
-          <Column header="Year" style="width: 4rem">
-            <template #body="{ data }: { data: ParsedRow }">
-              {{ data.birthYear ?? '—' }}
-            </template>
-          </Column>
-          <Column v-for="(t, i) in testTypes" :key="t.id" :header="t.test_name" style="width: 5.5rem">
-            <template #body="{ data }: { data: ParsedRow }">
-              {{ data.scores[i] ?? '—' }}
-            </template>
-          </Column>
-          <Column header="">
-            <template #body="{ data }: { data: ParsedRow }">
-              <small v-if="data.errorMsg" class="text-red-500">{{ data.errorMsg }}</small>
-            </template>
-          </Column>
-        </DataTable>
+
       </template>
+
+      <DataTable :value="parsedRows" scrollable scroll-height="500px" size="small">
+        <!-- ICON FOR ROW STATUS -->
+        <Column header="" style="width: 3rem">
+          <template #body="{ data }: { data: ParsedRow }">
+            <Tag v-if="data.status === 'new'" severity="success" icon="pi pi-plus" class="w-6 h-6 p-0 justify-center" />
+            <Tag v-else-if="data.status === 'existing'" severity="info" icon="pi pi-user"
+              class="w-6 h-6 p-0 justify-center" />
+          </template>
+        </Column>
+        <!-- NAME AND AGE -->
+        <Column header="Etunimi">
+          <template #body="{ data }: { data: ParsedRow }">
+            {{ data.firstName }}
+          </template>
+        </Column>
+        <Column header="Sukunimi">
+          <template #body="{ data }: { data: ParsedRow }">
+            {{ data.lastName }}
+          </template>
+        </Column>
+        <Column header="Syntymävuosi">
+          <template #body="{ data }: { data: ParsedRow }">
+            {{ data.birthYear ?? '—' }}
+          </template>
+        </Column>
+        <!-- THE TEST TYPE COLUMNS TO RECORD THE RESULTS -->
+        <Column v-for="(t, i) in testTypes" :key="t.id" :header="t.test_name">
+          <template #body="{ data }: { data: ParsedRow }">
+            {{ data.scores[i] ?? '—' }}
+          </template>
+        </Column>
+        <Column header="">
+          <template #body="{ data }: { data: ParsedRow }">
+            <small v-if="data.errorMsg" class="text-red-500">{{ data.errorMsg }}</small>
+          </template>
+        </Column>
+      </DataTable>
+
+
     </template>
   </div>
 </template>
