@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Card, Column, DataTable } from 'primevue';
-import { useSportsTestStore } from '../../stores/sportsTestStore';
 import type { SportsTest, TestType } from '../../types';
 
 
@@ -9,8 +8,6 @@ const props = defineProps<{
 	type: TestType
 	sportsTests: SportsTest[]
 }>()
-
-const sportsTestStore = useSportsTestStore()
 
 </script>
 

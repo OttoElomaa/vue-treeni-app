@@ -48,7 +48,7 @@ onMounted(async () => {
         </div>
         <div v-else class="grid gap-4 grid-cols-1">
 
-                <div class="flex flew-row gap-24">
+                <div class="flex flex-row gap-24">
                         <div>
                                 <p class="text-2xl">Player Analyze Screen</p>
                                 <h1 class="text-4xl">{{ playerName }}</h1>

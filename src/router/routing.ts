@@ -1,17 +1,29 @@
 import type { Player } from '../types';
 import router from './index';
 
+
+
+// ##################################################
+// #### TEAM VIEWS
 export const goToTeamView = (teamId: number) => {
   if (teamId) {
     router.push(`/intake/team/${teamId}`);
   }
 };
 
+export const goToBatchIntake = (teamId: string) => {
+  if (teamId) {
+    router.push(`/intake/team/${teamId}/batch`);
+  }
+};
 
 export const goToAddPlayer = (team_id:string) => {
     router.push(`/intake/team/${team_id}/add`)
 }
 
+
+// ###############################################################
+// #### PLAYER VIEWS
 export const goToEditPlayer = (player: Player) => {
     router.push(`/intake/team/${player.team_id}/player/${player.id}/edit`)
 }

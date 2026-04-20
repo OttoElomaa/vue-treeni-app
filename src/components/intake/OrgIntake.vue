@@ -4,7 +4,7 @@ import type { Team } from '../../types';
 import { Button, Card } from 'primevue';
 import { RouterLink } from 'vue-router';
 import { useTeamStore } from '../../stores/teamStore';
-import { goToAddPlayer } from '../../router/routing';
+import { goToAddPlayer, goToBatchIntake, goToTeamView } from '../../router/routing';
 
 
 const teamStore = useTeamStore()
@@ -21,18 +21,19 @@ onMounted(async () => {
         <p>{{ teamStore.errorText }}</p>
 
         <div class="grid gap-4 grid-cols-1">
-            <RouterLink v-for="team in teamStore.teams" :key="team.id" :to="`/intake/team/${team.id}`"
-                class="card-link">
+            <template v-for="team in teamStore.teams" :key="team.id">
 
-                <Card>
+                <Card @click="goToTeamView(team.id)"
+                    class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">
                     <template #content>
                         <div class="flex flex-row gap-6">
                             <p class="text-2xl  min-w-100">{{ team.team_name }}</p>
-                            <Button label="Uusi pelaaja" @click="goToAddPlayer(String(team.id))" />
+                            <Button label="Uusi pelaaja" @click.stop.prevent="goToAddPlayer(String(team.id))" />
+                            <Button label="Lisää monta" @click.stop.prevent="goToBatchIntake(String(team.id))" />
                         </div>
                     </template>
                 </Card>
-            </RouterLink>
+            </template>
         </div>
     </div>
 </template>

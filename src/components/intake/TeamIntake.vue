@@ -5,7 +5,7 @@ import { Button, Card } from 'primevue';
 import { useRouter } from 'vue-router';
 import { usePlayerStore } from '../../stores/playerStore';
 import { useTeamStore } from '../../stores/teamStore';
-import { goToAddPlayer, goToAddTest, goToEditPlayer, goToPlayer } from '../../router/routing';
+import { goToAddPlayer, goToAddTest, goToBatchIntake, goToEditPlayer, goToPlayer } from '../../router/routing';
 
 
 const props = defineProps<{
@@ -40,8 +40,9 @@ onMounted(async () => {
         <p class="text-2xl">Team Intake Screen</p>
         <h1 class="text-4xl">{{ teamName }}</h1>
 
-        <div class="flex-row">
-            <Button label="Uusi pelaaja" @click="goToAddPlayer(props.teamId)" class="flex-none" />
+        <div class="flex flex-row gap-6">
+            <Button label="Uusi pelaaja" @click="goToAddPlayer(props.teamId)" />
+            <Button label="Lisää monta" @click="goToBatchIntake(props.teamId)" />
         </div>
 
         <div class="grid gap-4 grid-cols-1">
@@ -56,8 +57,10 @@ onMounted(async () => {
                                 <p>Born {{ player.birth_year }}</p>
                             </div>
 
-                            <Button severity="secondary" class="flex z-10" label="Muokkaa" @click.stop.prevent="goToEditPlayer(player)" />
-                            <Button label="Uusi testitulos" @click.stop.prevent="goToAddTest(teamId, String(player.id))" />
+                            <Button severity="secondary" class="flex z-10" label="Muokkaa"
+                                @click.stop.prevent="goToEditPlayer(player)" />
+                            <Button label="Uusi testitulos"
+                                @click.stop.prevent="goToAddTest(teamId, String(player.id))" />
                         </div>
                     </template>
                 </Card>
