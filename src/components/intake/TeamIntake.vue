@@ -45,25 +45,29 @@ onMounted(async () => {
             <Button label="Lisää monta" @click="goToBatchIntake(props.teamId)" />
         </div>
 
-        <div class="grid gap-4 grid-cols-1">
+        <div class="flex flex-col gap-4">
             <template v-for="player in playerStore.players" :key="player.id">
 
-                <Card @click="goToPlayer(player.id, Number(props.teamId))"
-                    class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">
-                    <template #content>
-                        <div class="flex flex-row gap-6">
-                            <div class="min-w-100">
-                                <p class="text-2xl">{{ player.first_name }} {{ player.last_name }}</p>
-                                <p>Born {{ player.birth_year }}</p>
-                            </div>
+                <div class="flex flex-row">
+                    <Card @click="goToPlayer(player.id, Number(props.teamId))"
+                        class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">
+                        <template #content>
+                            <div class="flex flex-row gap-6">
+                                <div class="min-w-100">
+                                    <p class="text-2xl">{{ player.first_name }} {{ player.last_name }}</p>
+                                    <p>Born {{ player.birth_year }}</p>
+                                </div>
 
-                            <Button severity="secondary" class="flex z-10" label="Muokkaa"
-                                @click.stop.prevent="goToEditPlayer(player)" />
-                            <Button label="Uusi testitulos"
-                                @click.stop.prevent="goToAddTest(teamId, String(player.id))" />
-                        </div>
-                    </template>
-                </Card>
+                                <Button severity="secondary" class="flex z-10" label="Muokkaa"
+                                    @click.stop.prevent="goToEditPlayer(player)" />
+                                <Button label="Uusi testitulos"
+                                    @click.stop.prevent="goToAddTest(teamId, String(player.id))" />
+                                <div class="min-w-20" />
+                            </div>
+                        </template>
+                    </Card>
+                </div>
+
             </template>
         </div>
 

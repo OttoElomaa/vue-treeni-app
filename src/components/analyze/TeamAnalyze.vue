@@ -8,6 +8,7 @@ import CategorySelectButton from '../misc/CategorySelectButton.vue';
 import type { SportsTest } from '../../types';
 import { useSportsTestStore } from '../../stores/sportsTestStore';
 import { useTestTypeStore } from '../../stores/testTypeStore';
+import TestMultiBoardTeam from './TestMultiBoardTeam.vue';
 
 
 
@@ -27,18 +28,24 @@ const players = playerStore.getPlayersByTeam(Number(props.teamId));
 const teamName = ref("")
 
 
-//const teamTests = computed(sportsTestStore.sportsTests.filter(t => t.))
+const teamTests = ref([] as SportsTest[])
+
+function teamTestsByType(typeId: number) {
+    return teamTests.value.filter(t => t.type_id === typeId)
+}
+
 
 onMounted(async () => {
     // SUPABASE FETCH TEAM'S PLAYERS + FETCH TEAM INFO
-    teamName.value = await teamStore.getTeamName(Number(props.teamId))
     playerStore.fetchPlayersByTeamId(Number(props.teamId));
+    teamTests.value = await sportsTestStore.fetchTestsByTeam(Number(props.teamId))
+    teamName.value = await teamStore.getTeamName(Number(props.teamId))
 });
 
 </script>
 
 <template>
-    <div v-if="players.length == 0">
+    <div v-if="teamTests.length == 0">
         <p class="text-2xl">Loading...</p>
     </div>
     <div v-else class="grid gap-4 grid-cols-1">
@@ -48,25 +55,28 @@ onMounted(async () => {
                 <p class="text-2xl">Team Analyze Screen</p>
                 <h1 class="text-4xl">{{ teamName }}</h1>
             </div>
-            <CategorySelectButton/>
+            <CategorySelectButton />
 
         </div>
 
-        <div class="flex flex-row">
-            <Card>
-                <template #content>
+        <div class="flex flex-col gap-6">
+            <div class="flex flex-row">
+                <Card>
+                    <template #content>
+                        <DataTable :value="players" tableStyle="min-width: 50rem"
+                            @row-click="(e) => goToPlayerAnalyze(e.data.id, Number(props.teamId))" row-hover stripedRows
+                            scrollable scroll-height="600px" class="cursor-pointer">
+                            <Column field="first_name" header="First Name" sortable></Column>
+                            <Column field="last_name" header="Last Name" sortable></Column>
+                            <Column field="birth_year" header="Birth year" sortable></Column>
+                        </DataTable>
+                    </template>
+                </Card>
+            </div>
 
-                    <DataTable :value="players" tableStyle="min-width: 50rem"
-                        @row-click="(e) => goToPlayerAnalyze(e.data.id, Number(props.teamId))" row-hover
-                        class="cursor-pointer">
-                        <Column field="first_name" header="First Name"></Column>
-                        <Column field="last_name" header="Last Name"></Column>
-                        <Column field="birth_year" header="Birth year"></Column>
-                    </DataTable>
-
-
-                </template>
-            </Card>
+            <div v-for="type in testTypeStore.filteredTestTypes" :key="type.id">
+                <TestMultiBoardTeam :type="type" :sportsTests="teamTestsByType(type.id)" />
+            </div>
         </div>
     </div>
 

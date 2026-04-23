@@ -128,6 +128,20 @@ export const useSportsTestStore = defineStore("sportsTests", () => {
     });
   }
 
+  async function fetchTestsByTeam(teamId: number) {
+    const { data, error } = await supabase
+      .from("tests")
+      .select("*, players!inner(team_id)")
+      .eq("players.team_id", teamId);
+
+    if (error) {
+      console.error("Failed to fetch team tests:", error);
+      return [];
+    }
+
+    return data as SportsTest[];
+  }
+
   async function addSportsTest(test: CreateSportsTest) {
     const result = await insertOne<SportsTest>("tests", test);
     if (result.error) {
@@ -142,7 +156,7 @@ export const useSportsTestStore = defineStore("sportsTests", () => {
     if (result.error) {
       error.value = result.error;
       console.log(error);
-      
+
       return;
     }
     sportsTests.value.push(...result.data);
@@ -157,6 +171,7 @@ export const useSportsTestStore = defineStore("sportsTests", () => {
     initRealtime,
     fetchTestsByPlayerId,
     getTestsByPlayer,
+    fetchTestsByTeam,
     addSportsTest,
     addSportsTests,
     clearStore,

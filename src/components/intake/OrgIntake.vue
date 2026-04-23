@@ -20,19 +20,21 @@ onMounted(async () => {
 
         <p>{{ teamStore.errorText }}</p>
 
-        <div class="grid gap-4 grid-cols-1">
+        <div class="flex flex-col gap-4">
             <template v-for="team in teamStore.teams" :key="team.id">
-
-                <Card @click="goToTeamView(team.id)"
-                    class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">
-                    <template #content>
-                        <div class="flex flex-row gap-6">
-                            <p class="text-2xl  min-w-100">{{ team.team_name }}</p>
-                            <Button label="Uusi pelaaja" @click.stop.prevent="goToAddPlayer(String(team.id))" />
-                            <Button label="Lisää monta" @click.stop.prevent="goToBatchIntake(String(team.id))" />
-                        </div>
-                    </template>
-                </Card>
+                <div class="flex flex-row">
+                    <Card @click="goToTeamView(team.id)"
+                        class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">
+                        <template #content>
+                            <div class="flex flex-row gap-6">
+                                <p class="text-2xl  min-w-100">{{ team.team_name }}</p>
+                                <Button label="Uusi pelaaja" @click.stop.prevent="goToAddPlayer(String(team.id))" />
+                                <Button label="Lisää monta" @click.stop.prevent="goToBatchIntake(String(team.id))" />
+                                <div class="min-w-20" />
+                            </div>
+                        </template>
+                    </Card>
+                </div>
             </template>
         </div>
     </div>

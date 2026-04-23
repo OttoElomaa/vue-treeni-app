@@ -237,7 +237,7 @@ export function useBatchIntake(teamId: () => number) {
   async function resolvePlayer(
     row: ParsedRow,
     batchCreated: Map<string, Player>,
-  ): Promise<{ player: Player | null; wasCreated: boolean } | null> {
+  ): Promise<{ player: Player | null; wasCreated: boolean }> {
     // HANDLE EXISTING ROWS - CREATE AN EMPTY PLAYER TO STORE THE PLAYER ID REFERENCE TO THE EXISTING RECORD
     if (row.playerId) {
       return { player: { id: row.playerId } as Player, wasCreated: false };

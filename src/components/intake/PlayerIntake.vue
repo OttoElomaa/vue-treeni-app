@@ -46,21 +46,23 @@ onMounted(async () => {
                         <Button label="Uusi testitulos" @click="goToAddTest(teamId, playerId)" class="flex-none" />
                 </div>
 
-                <div class="grid gap-4 grid-cols-1">
+                <div class="flex flex-col gap-4">
                         <template v-for="test in sportsTests" :key="test.id">
-
-                                <Card class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">
-                                        <template #content>
-                                                <div class="flex flex-row gap-6">
-                                                        <div class="min-w-100">
-                                                                <p class="text-2xl">{{ test.seconds }} {{
-                                                                        test.type_id }}</p>
-                                                                <p>Taken at: {{ test.taken_at }}</p>
+                                <div class="flex flex-row">
+                                        <Card class="cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-700">
+                                                <template #content>
+                                                        <div class="flex flex-row gap-6">
+                                                                <div class="min-w-100">
+                                                                        <p class="text-2xl">{{ test.seconds }} {{
+                                                                                test.type_id }}</p>
+                                                                        <p>Taken at: {{ test.taken_at }}</p>
+                                                                </div>
+                                                                <div class="min-w-20" />
+                                                                <!-- <Button class="flex z-10" label="Muokkaa" @click.stop.prevent="goToEditPlayer(player)" /> -->
                                                         </div>
-                                                        <!-- <Button class="flex z-10" label="Muokkaa" @click.stop.prevent="goToEditPlayer(player)" /> -->
-                                                </div>
-                                        </template>
-                                </Card>
+                                                </template>
+                                        </Card>
+                                </div>
                         </template>
                 </div>
         </div>
