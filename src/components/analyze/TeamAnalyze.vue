@@ -1,15 +1,21 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { Card, Column, DataTable } from 'primevue';
 import { usePlayerStore } from '../../stores/playerStore';
 import { useTeamStore } from '../../stores/teamStore';
-import { goToPlayer } from '../../router/routing';
+import { goToPlayerAnalyze } from '../../router/routing';
 import CategorySelectButton from '../misc/CategorySelectButton.vue';
+import type { SportsTest } from '../../types';
+import { useSportsTestStore } from '../../stores/sportsTestStore';
+import { useTestTypeStore } from '../../stores/testTypeStore';
 
 
 
 const playerStore = usePlayerStore()
 const teamStore = useTeamStore()
+const sportsTestStore = useSportsTestStore()
+const testTypeStore = useTestTypeStore()
+
 
 const props = defineProps<{
     teamId: string
@@ -19,6 +25,9 @@ const props = defineProps<{
 // COMPUTED REF that FILTERS PLAYERS in STORE based on team ID
 const players = playerStore.getPlayersByTeam(Number(props.teamId));
 const teamName = ref("")
+
+
+//const teamTests = computed(sportsTestStore.sportsTests.filter(t => t.))
 
 onMounted(async () => {
     // SUPABASE FETCH TEAM'S PLAYERS + FETCH TEAM INFO
@@ -48,7 +57,7 @@ onMounted(async () => {
                 <template #content>
 
                     <DataTable :value="players" tableStyle="min-width: 50rem"
-                        @row-click="(e) => goToPlayer(e.data.id, Number(props.teamId))" row-hover
+                        @row-click="(e) => goToPlayerAnalyze(e.data.id, Number(props.teamId))" row-hover
                         class="cursor-pointer">
                         <Column field="first_name" header="First Name"></Column>
                         <Column field="last_name" header="Last Name"></Column>

@@ -31,7 +31,9 @@ export const goToEditPlayer = (player: Player) => {
 export const goToPlayer = (player_id: number, team_id:number) => {
     router.push(`/intake/team/${team_id}/player/${player_id}`)
 }
-
+export const goToPlayerAnalyze = (player_id: number, team_id:number) => {
+    router.push(`/analyze/team/${team_id}/player/${player_id}`)
+}
 
 
 export const goToAddTest = (teamId: string, playerId: string) => {

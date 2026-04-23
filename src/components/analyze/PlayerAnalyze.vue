@@ -31,11 +31,11 @@ const playerName = ref("")
 const loading = ref(true)
 
 
+
 onMounted(async () => {
-        playerStore.fetchPlayerById(Number(props.playerId))
+        sportsTestStore.fetchTestsByPlayerId(Number(props.playerId));
         playerName.value = await playerStore.getPlayerName(Number(props.playerId))
         loading.value = false
-
 });
 
 
