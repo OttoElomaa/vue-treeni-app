@@ -5,10 +5,11 @@ import { usePlayerStore } from '../../stores/playerStore';
 import { useTeamStore } from '../../stores/teamStore';
 import { goToPlayerAnalyze } from '../../router/routing';
 import CategorySelectButton from '../misc/CategorySelectButton.vue';
-import type { SportsTest } from '../../types';
+import type { Player, SportsTest } from '../../types';
 import { useSportsTestStore } from '../../stores/sportsTestStore';
 import { useTestTypeStore } from '../../stores/testTypeStore';
 import TestMultiBoardTeam from './TestMultiBoardTeam.vue';
+import { useTestStats } from './useTestStats';
 
 
 
@@ -34,6 +35,10 @@ function teamTestsByType(typeId: number) {
     return teamTests.value.filter(t => t.type_id === typeId)
 }
 
+
+const { getPlayerStats } = useTestStats(
+    () => teamTests.value
+)
 
 onMounted(async () => {
     // SUPABASE FETCH TEAM'S PLAYERS + FETCH TEAM INFO
@@ -69,6 +74,14 @@ onMounted(async () => {
                             <Column field="first_name" header="First Name" sortable></Column>
                             <Column field="last_name" header="Last Name" sortable></Column>
                             <Column field="birth_year" header="Birth year" sortable></Column>
+
+                            <Column v-for="t in testTypeStore.filteredTestTypes" :key="t.id" :header="t.test_name"
+                                style="width: 5.5rem">
+                                <template #body="{ data }: { data: Player }">
+                                    {{ getPlayerStats(data.id, t.id)?.best ?? '—' }}
+                                </template>
+                            </Column>
+
                         </DataTable>
                     </template>
                 </Card>
