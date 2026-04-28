@@ -39,38 +39,34 @@ function formatDate(date: string | Date) {
 
 
                     <!-- Team summary -->
-                    <div v-if="teamStats.getTeamStats(type.id)"
-                        class="mt-4 flex flex-row gap-6 text-sm text-surface-500">
+                    <div v-if="teamStats.getTeamStats(type.id)" class="mt-4 flex flex-row gap-6">
 
 
-                        <Message severity="success" :closable="false" class="flex flex-row">
-                            <span>Paras</span>
-                            <span class="ml-2 font-medium">
+                        <div class="flex flex-col">
+                            <Message severity="success" :closable="false">Paras</Message>
+                            <span class="mt-3">
                                 {{ teamStats.bestPlayer(type.id)?.player.first_name }}
                                 {{ formatScore(teamStats.getTeamStats(type.id)!.best,
                                     teamStats.getTeamStats(type.id)!.field) }}
                             </span>
-                        </Message>
+                        </div>
 
-                        <Message severity="info" :closable="false" class="flex flex-row">
-                            <span>Keskiarvo</span>
-                            <span class="ml-2 font-medium">
+                        <div class="flex flex-col">
+                            <Message severity="info" :closable="false">Keskiarvo</Message>
+                            <span class="mt-3 font-medium">
                                 {{ formatScore(teamStats.getTeamStats(type.id)!.avg,
                                     teamStats.getTeamStats(type.id)!.field) }}
                             </span>
-                        </Message>
+                        </div>
 
-                        <Message severity="success" :closable="false" class="flex flex-row">
-                            <span>Huonoin</span>
-                            <span class="ml-2 font-medium">
+                        <div class="flex flex-col">
+                            <Message severity="info" :closable="false">Huonoin</Message>
+                            <span class="mt-3">
                                 {{ teamStats.worstPlayer(type.id)?.player.first_name }}
                                 {{ formatScore(teamStats.getTeamStats(type.id)!.worst,
                                     teamStats.getTeamStats(type.id)!.field) }}
                             </span>
-                        </Message>
-
-
-
+                        </div>
                     </div>
 
 
@@ -85,7 +81,7 @@ function formatDate(date: string | Date) {
                         <Column header="Player" style="width: 18rem">
                             <template #body="{ data }: { data: TeamStatsEntry }">
                                 <span class="font-semibold">{{ data.player.first_name }} {{ data.player.last_name
-                                    }}</span>
+                                }}</span>
                             </template>
                         </Column>
                         <Column header="Best" style="width: 10rem">

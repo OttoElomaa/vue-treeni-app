@@ -111,7 +111,7 @@ const items = computed<MenuItem[]>(() => {
 
 <template>
 
-  <Breadcrumb :model="items" class="bg-transparent">
+  <Breadcrumb :model="items" class="z-10 bg-surface-100 dark:bg-surface-900 pb-6 pt-3">
 
 
 
