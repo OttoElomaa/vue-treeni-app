@@ -10,6 +10,7 @@ import { useSportsTestStore } from '../../stores/sportsTestStore';
 import { useTestTypeStore } from '../../stores/testTypeStore';
 import TestMultiBoardTeam from './TestMultiBoardTeam.vue';
 import { useTestStats } from './useTestStats';
+import { useTeamStats } from './useTeamStats';
 
 
 
@@ -39,6 +40,7 @@ function teamTestsByType(typeId: number) {
 const { getPlayerStats } = useTestStats(
     () => teamTests.value
 )
+
 
 onMounted(async () => {
     // SUPABASE FETCH TEAM'S PLAYERS + FETCH TEAM INFO
@@ -88,7 +90,7 @@ onMounted(async () => {
             </div>
 
             <div v-for="type in testTypeStore.filteredTestTypes" :key="type.id">
-                <TestMultiBoardTeam :type="type" :sportsTests="teamTestsByType(type.id)" />
+                <TestMultiBoardTeam :type="type" :sportsTests="teamTestsByType(type.id)" :players="players" />
             </div>
         </div>
     </div>
